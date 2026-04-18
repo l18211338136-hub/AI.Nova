@@ -1,0 +1,14 @@
+{
+  "solution": {
+    "path": "AI.Nova.slnx",
+    "projects": [
+      "src\\Client\\AI.Nova.Client.Core\\AI.Nova.Client.Core.csproj",
+      "src\\Client\\AI.Nova.Client.Web\\AI.Nova.Client.Web.csproj",
+      "src\\Server\\AI.Nova.Server.Api\\AI.Nova.Server.Api.csproj",
+      "src\\Server\\AI.Nova.Server.Shared\\AI.Nova.Server.Shared.csproj",
+      "src\\Server\\AI.Nova.Server.Web\\AI.Nova.Server.Web.csproj",
+      "src\\Shared\\AI.Nova.Shared.csproj",
+      "src\\Tests\\AI.Nova.Tests.csproj"
+    ]
+  }
+}
