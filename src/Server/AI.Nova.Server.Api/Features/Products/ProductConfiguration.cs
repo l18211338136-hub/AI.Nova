@@ -5,6 +5,7 @@ public partial class ProductConfiguration : IEntityTypeConfiguration<Product>
 {
     public void Configure(EntityTypeBuilder<Product> builder)
     {
+        builder.ToTable("Products");
         builder.HasIndex(p => p.Name).IsUnique();
         builder.HasIndex(p => p.ShortId).IsUnique();
 

@@ -107,6 +107,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="Features\Addresses\" />
       <Folder Include="Migrations\" />
     </ItemGroup>
 

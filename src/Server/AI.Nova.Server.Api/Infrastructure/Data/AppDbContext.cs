@@ -1,4 +1,4 @@
-﻿using System.Linq.Expressions;
+using System.Linq.Expressions;
 using AI.Nova.Server.Api.Features.AreaCodes;
 using AI.Nova.Server.Api.Features.Attachments;
 using AI.Nova.Server.Api.Features.Categories;
@@ -6,6 +6,10 @@ using AI.Nova.Server.Api.Features.Identity.Models;
 using AI.Nova.Server.Api.Features.Products;
 using AI.Nova.Server.Api.Features.PushNotification;
 using AI.Nova.Server.Api.Features.Todo;
+using AI.Nova.Server.Api.Features.Addresses;
+using AI.Nova.Server.Api.Features.Carts;
+using AI.Nova.Server.Api.Features.Orders;
+using AI.Nova.Server.Api.Features.Payments;
 using AI.Nova.Server.Api.Infrastructure.Data.Audit;
 using AI.Nova.Server.Api.Infrastructure.Data.Configurations;
 using AI.Nova.Server.Api.Infrastructure.Services.Contracts;
@@ -23,6 +27,9 @@ public partial class AppDbContext(DbContextOptions<AppDbContext> options, ICurre
     public DbSet<TodoItem> TodoItems { get; set; } = default!;
     public DbSet<Category> Categories { get; set; } = default!;
     public DbSet<Product> Products { get; set; } = default!;
+    public DbSet<ProductImage> ProductImages { get; set; } = default!;
+    public DbSet<ProductReview> ProductReviews { get; set; } = default!;
+    public DbSet<Inventory> Inventories { get; set; } = default!;
     public DbSet<PushNotificationSubscription> PushNotificationSubscriptions { get; set; } = default!;
 
     public DbSet<WebAuthnCredential> WebAuthnCredential { get; set; } = default!;
@@ -31,6 +38,12 @@ public partial class AppDbContext(DbContextOptions<AppDbContext> options, ICurre
 
     public DbSet<Attachment> Attachments { get; set; } = default!;
     public DbSet<AreaCode> AreaCodes { get; set; } = default!;
+
+    public DbSet<Address> Addresses { get; set; } = default!;
+    public DbSet<Order> Orders { get; set; } = default!;
+    public DbSet<OrderItem> OrderItems { get; set; } = default!;
+    public DbSet<Payment> Payments { get; set; } = default!;
+    public DbSet<CartItem> CartItems { get; set; } = default!;
 
     public DbSet<DataProtectionKey> DataProtectionKeys { get; set; } = default!;
 
