@@ -29,7 +29,8 @@ public static partial class Program
             var handlerFactory = sp.GetRequiredService<HttpMessageHandlersChainFactory>();
             var httpClient = new HttpClient(handlerFactory.Invoke())
             {
-                BaseAddress = serverAddress
+                BaseAddress = serverAddress,
+                Timeout = TimeSpan.FromMinutes(10)
             };
 
             httpClient.DefaultRequestHeaders.Add("X-Origin", builder.HostEnvironment.BaseAddress);
