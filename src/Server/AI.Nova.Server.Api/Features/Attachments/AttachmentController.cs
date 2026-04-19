@@ -118,7 +118,7 @@ public partial class AttachmentController : AppControllerBase, IAttachmentContro
                     product.HasPrimaryImage = false;
                     product.PrimaryImageAltText = null;
                     await DbContext.SaveChangesAsync(cancellationToken);
-                    await responseCacheService.PurgeProductCache(product.ShortId ?? 0);
+                    await responseCacheService.PurgeProductCache(product.ShortId);
                 }
             }
 

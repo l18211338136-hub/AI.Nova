@@ -72,7 +72,7 @@ public partial class Order : AuditEntity
     /// <summary>
     /// 订单实时流转状态（0:待付款, 1:已付款, 2:已发货, 3:已完成, 4:已取消, 5:退款中）。
     /// </summary>
-    [Comment("当前订单所处的业务状态枚举值")]
+    [Comment("0:待付款, 1:已付款, 2:已发货, 3:已完成, 4:已取消, 5:退款中")]
     public short? Status { get; set; }
 
     /// <summary>

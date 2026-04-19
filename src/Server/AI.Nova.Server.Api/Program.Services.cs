@@ -1,4 +1,4 @@
-﻿using System.ClientModel.Primitives;
+using System.ClientModel.Primitives;
 using System.Net;
 using System.Net.Mail;
 using AdsPush;
@@ -10,6 +10,9 @@ using AI.Nova.Server.Api.Features.Identity.Services;
 using AI.Nova.Server.Api.Features.Products;
 using AI.Nova.Server.Api.Features.PushNotification;
 using AI.Nova.Server.Api.Features.Statistics;
+using AI.Nova.Server.Api.Features.Addresses;
+using AI.Nova.Server.Api.Features.Orders;
+using AI.Nova.Server.Api.Features.Carts;
 using AI.Nova.Server.Api.Infrastructure.Data.Seed;
 using AI.Nova.Server.Api.Infrastructure.RequestPipeline;
 using AI.Nova.Server.Api.Infrastructure.Services;
@@ -80,6 +83,11 @@ public static partial class Program
         services.AddScoped<IDataSeeder, IdentitySeeder>();
         services.AddScoped<IDataSeeder, SystemPromptSeeder>();
         services.AddScoped<IDataSeeder, AreaCodeSeeder>();
+        services.AddScoped<IDataSeeder, AddressSeeder>();
+        services.AddScoped<IDataSeeder, InventorySeeder>();
+        services.AddScoped<IDataSeeder, ProductImageSeeder>();
+        services.AddScoped<IDataSeeder, OrderSeeder>();
+        services.AddScoped<IDataSeeder, CartSeeder>();
 
         services.AddSingleton(_ => PhoneNumberUtil.GetInstance());
         services.AddSingleton<IBlobStorage>(sp =>
