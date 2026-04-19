@@ -101,10 +101,16 @@ public static class WebApplicationBuilderExtensions
             {
                 httpClient.DefaultRequestVersion = HttpVersion.Version30;
                 httpClient.DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher;
+                httpClient.Timeout = TimeSpan.FromMinutes(10);
             });
 
             // Turn on resilience by default
-            http.AddStandardResilienceHandler();
+            http.AddStandardResilienceHandler(options =>
+            {
+                options.AttemptTimeout.Timeout = TimeSpan.FromMinutes(10);
+                options.CircuitBreaker.SamplingDuration = TimeSpan.FromMinutes(20);
+                options.TotalRequestTimeout.Timeout = TimeSpan.FromMinutes(10);
+            });
 
             // Turn on service discovery by default
             http.AddServiceDiscovery();
