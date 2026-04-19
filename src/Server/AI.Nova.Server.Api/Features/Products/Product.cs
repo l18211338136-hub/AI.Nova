@@ -22,7 +22,7 @@ public partial class Product : AuditEntity
     /// </summary>
     [Range(0, int.MaxValue)]
     [Comment("用于生成友好 URL 的短整型 ID")]
-    public int? ShortId { get; set; }
+    public int ShortId { get; set; }
 
     /// <summary>
     /// 产品名称。
