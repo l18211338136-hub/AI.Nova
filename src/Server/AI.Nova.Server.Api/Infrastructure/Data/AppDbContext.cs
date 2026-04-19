@@ -59,7 +59,7 @@ public partial class AppDbContext(DbContextOptions<AppDbContext> options, ICurre
         modelBuilder.OnHangfireModelCreating("jobs");
 
         modelBuilder.HasSequence<int>("ProductShortId")
-            .StartsAt(10_051) // There are 50 products added by ProductConfiguration.cs
+            .StartsAt(10_300)
             .IncrementsBy(1);
 
 

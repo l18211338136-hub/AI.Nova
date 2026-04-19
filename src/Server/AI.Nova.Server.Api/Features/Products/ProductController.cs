@@ -57,6 +57,11 @@ public partial class ProductController : AppControllerBase, IProductController
         var dto = await Get().FirstOrDefaultAsync(t => t.Id == id, cancellationToken)
             ?? throw new ResourceNotFoundException(Localizer[nameof(AppStrings.ProductCouldNotBeFound)]);
 
+        if (dto!.HasPrimaryImage && !(await DbContext.Attachments.AnyAsync(x => x.Id == id)))
+        {
+            dto.DefaultImage = (await DbContext.ProductImages.FirstOrDefaultAsync(x => x.ProductId == id))?.ImageUrl;
+        }
+
         return dto;
     }
 

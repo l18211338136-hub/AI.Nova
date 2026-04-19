@@ -109,6 +109,13 @@
     <ItemGroup>
       <Folder Include="Features\Addresses\" />
       <Folder Include="Migrations\" />
+      <Folder Include="wwwroot\products\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="data\AreaCodes.sql">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
     <!--

@@ -37,6 +37,8 @@ public partial class ProductDto
     [Display(Name = nameof(AppStrings.Category))]
     public string? CategoryName { get; set; }
 
+    public string? DefaultImage { get; set; }
+
     public long Version { get; set; }
 
     public bool HasPrimaryImage { get; set; } = false;
@@ -46,6 +48,11 @@ public partial class ProductDto
 
     public string? GetPrimaryMediumImageUrl(Uri absoluteServerAddress)
     {
+        if (!string.IsNullOrWhiteSpace(DefaultImage))
+        {
+            return new Uri(absoluteServerAddress, $"{DefaultImage}").ToString();
+        }
+
         return HasPrimaryImage is false
             ? null
             : new Uri(absoluteServerAddress, $"/api/v1/Attachment/GetAttachment/{Id}/{AttachmentKind.ProductPrimaryImageMedium}?v={Version}").ToString();
