@@ -26,7 +26,7 @@
         </BitStack>
         <BitStack Horizontal Style="height:calc(100% - 49px)">
             <BitCard Class="users-card page-card" NoShadow FullHeight>
-                @if (isLoadingUsers)
+                @if (isLoadingUsers && dataGrid is null)
                 {
                     <BitRollingSquareLoading Size="BitSize.Small" />
                 }
@@ -38,43 +38,38 @@
                                   Immediate DebounceTime="300"
                                   Styles="@(new() { InputContainer = "width:100%" })"
                                   Placeholder="@Localizer[nameof(AppStrings.SearchUsersPlaceholder)]" />
-                    <br />
-                    @if (userNavItems.Count == 0)
-                    {
-                        <BitText>@Localizer[nameof(AppStrings.NoUserMessage)]</BitText>
-                    }
-                    else
-                    {
-                        <BitNav NoCollapse
-                                Reselectable
-                                Items="userNavItems"
-                                Mode="BitNavMode.Manual"
-                                Accent="BitColor.SecondaryBackground"
-                                OnSelectItem="WrapHandled(async (BitNavItem item) => await HandleOnSelectUser(item))">
-                            <ItemTemplate Context="item">
-                                @{
-                                    var user = (item.Data as UserDto)!;
-                                    var hasDescription = user.DisplayUserName != user.DisplayName;
-                                }
-                                <BitStack Gap="0" Style="@(hasDescription ? "height:65px" : "")">
-                                    <BitStack Horizontal VerticalAlign="BitAlignment.Center">
-                                        <BitText Style="overflow:hidden;text-overflow:ellipsis">@item.Text</BitText>
-                                        @if (loadingUserKey == item.Key)
+                    <div class="grid-container">
+                        <BitDataGrid @ref="dataGrid"
+                                     TGridItem="UserDto"
+                                     ItemKey="(u => u.Id)"
+                                     Virtualize="true"
+                                     ItemsProvider="usersProvider">
+                            <BitDataGridTemplateColumn Class="user-col">
+                                <div @onclick="WrapHandled(() => HandleOnSelectUser(context))"
+                                     class="user-row @(selectedUserItem?.Id == context.Id ? "selected" : "")">
+                                    @{
+                                        var hasDescription = context.DisplayUserName != context.DisplayName;
+                                    }
+                                    <BitStack Gap="0">
+                                        <BitStack Horizontal VerticalAlign="BitAlignment.Center">
+                                            <BitText Class="user-name">@context.DisplayName</BitText>
+                                            @if (loadingUserKey == context.Id.ToString())
+                                            {
+                                                <BitSpacer />
+                                                <BitBouncingDotsLoading Size="BitSize.Small" />
+                                            }
+                                        </BitStack>
+                                        @if (hasDescription)
                                         {
-                                            <BitSpacer />
-                                            <BitBouncingDotsLoading Size="BitSize.Small" />
+                                            <BitText Color="BitColor.SecondaryForeground" Typography="BitTypography.Body2">
+                                                @context.DisplayUserName
+                                            </BitText>
                                         }
                                     </BitStack>
-                                    @if (hasDescription)
-                                    {
-                                        <BitText Color="BitColor.SecondaryForeground" Typography="BitTypography.Body2">
-                                            @user.DisplayUserName
-                                        </BitText>
-                                    }
-                                </BitStack>
-                            </ItemTemplate>
-                        </BitNav>
-                    }
+                                </div>
+                            </BitDataGridTemplateColumn>
+                        </BitDataGrid>
+                    </div>
                 }
             </BitCard>
             <BitCard Class="feat-card page-card" NoShadow FullSize>
@@ -90,7 +85,7 @@
                                     @if (isUserSelected)
                                     {
                                         <BitTag Color="BitColor.TertiaryBackground" Size="BitSize.Large" Class="selectable">
-                                            @selectedUserItem?.Key
+                                            @selectedUserItem?.Id.ToString()
                                         </BitTag>
                                     }
                                 </BitStack>
@@ -217,11 +212,11 @@
            OkText="@Localizer[nameof(AppStrings.Yes)]"
            CancelText="@Localizer[nameof(AppStrings.No)]"
            Title="@Localizer[nameof(AppStrings.DeleteUser)]"
-           Message="@Localizer.GetString(nameof(AppStrings.AreYouSureWannaDelete), selectedUserItem?.Text ?? "")" />
+           Message="@Localizer.GetString(nameof(AppStrings.AreYouSureWannaDelete), selectedUserItem?.DisplayName ?? "")" />
 
 <BitDialog OnOk="WrapHandled(RevokeAllSessions)"
            @bind-IsOpen="isRevokeAllUserSessionsDialogOpen"
            OkText="@Localizer[nameof(AppStrings.Yes)]"
            CancelText="@Localizer[nameof(AppStrings.No)]"
            Title="@Localizer[nameof(AppStrings.RevokeAllSessions)]"
-           Message="@Localizer.GetString(nameof(AppStrings.RevokeAllSessionsConfrimMessage), selectedUserItem?.Text ?? "")" />
+           Message="@Localizer.GetString(nameof(AppStrings.RevokeAllSessionsConfrimMessage), selectedUserItem?.DisplayName ?? "")" />

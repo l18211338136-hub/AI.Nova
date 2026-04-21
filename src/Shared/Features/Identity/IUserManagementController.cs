@@ -1,4 +1,4 @@
-﻿using AI.Nova.Shared.Features.Identity.Dtos;
+using AI.Nova.Shared.Features.Identity.Dtos;
 
 namespace AI.Nova.Shared.Features.Identity;
 
@@ -7,6 +7,9 @@ public interface IUserManagementController : IAppController
 {
     [HttpGet]
     Task<List<UserDto>> GetAllUsers(CancellationToken cancellationToken) => default!;
+
+    [HttpGet]
+    Task<PagedResponse<UserDto>> GetUsers(CancellationToken cancellationToken) => default!;
 
     [HttpGet]
     Task<int> GetOnlineUsersCount(CancellationToken cancellationToken);

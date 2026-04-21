@@ -1,4 +1,4 @@
-﻿using AI.Nova.Shared.Features.Todo;
+using AI.Nova.Shared.Features.Todo;
 using AI.Nova.Shared.Features.Dashboard;
 using AI.Nova.Shared.Features.Products;
 using AI.Nova.Shared.Features.Categories;
@@ -6,6 +6,7 @@ using AI.Nova.Shared.Features.Chatbot;
 using AI.Nova.Shared.Infrastructure.Dtos.SignalR;
 using AI.Nova.Shared.Features.Statistics;
 using AI.Nova.Shared.Features.Diagnostic;
+using AI.Nova.Shared.Features.Identity.Dtos;
 
 namespace AI.Nova.Shared.Infrastructure.Dtos;
 
@@ -45,6 +46,11 @@ namespace AI.Nova.Shared.Infrastructure.Dtos;
 [JsonSerializable(typeof(List<ProductsCountPerCategoryResponseDto>))]
 [JsonSerializable(typeof(OverallAnalyticsStatsDataResponseDto))]
 [JsonSerializable(typeof(List<ProductPercentagePerCategoryResponseDto>))]
+[JsonSerializable(typeof(UserDto))]
+[JsonSerializable(typeof(List<UserDto>))]
+[JsonSerializable(typeof(PagedResponse<UserDto>))]
+[JsonSerializable(typeof(UserSessionDto))]
+[JsonSerializable(typeof(List<UserSessionDto>))]
 
 [JsonSerializable(typeof(DiagnosticLogDto[]))]
 [JsonSerializable(typeof(StartChatRequest))]

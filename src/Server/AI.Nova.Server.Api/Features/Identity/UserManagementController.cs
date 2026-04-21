@@ -1,4 +1,4 @@
-﻿using AI.Nova.Shared.Features.Identity.Dtos;
+using AI.Nova.Shared.Features.Identity.Dtos;
 using AI.Nova.Server.Api.Features.Identity.Models;
 using AI.Nova.Shared.Features.Identity;
 using Microsoft.AspNetCore.SignalR;
@@ -20,6 +20,19 @@ public partial class UserManagementController : AppControllerBase, IUserManageme
     public IQueryable<UserDto> GetAllUsers()
     {
         return userManager.Users.Project();
+    }
+
+    [HttpGet]
+    public async Task<PagedResponse<UserDto>> GetUsers(ODataQueryOptions<UserDto> odataQuery, CancellationToken cancellationToken)
+    {
+        var query = (IQueryable<UserDto>)odataQuery.ApplyTo(GetAllUsers(), ignoreQueryOptions: AllowedQueryOptions.Top | AllowedQueryOptions.Skip);
+
+        var totalCount = await query.LongCountAsync(cancellationToken);
+
+        query = query.SkipIf(odataQuery.Skip is not null, odataQuery.Skip?.Value)
+                     .TakeIf(odataQuery.Top is not null, odataQuery.Top?.Value);
+
+        return new PagedResponse<UserDto>(await query.ToArrayAsync(cancellationToken), totalCount);
     }
 
     [HttpGet]

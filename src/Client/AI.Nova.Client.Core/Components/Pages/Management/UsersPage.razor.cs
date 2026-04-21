@@ -1,8 +1,9 @@
-﻿using AI.Nova.Shared.Features.Identity;
+using AI.Nova.Shared.Features.Identity;
 using AI.Nova.Shared.Features.Identity.Dtos;
 using AI.Nova.Client.Core.Infrastructure.Services.DiagnosticLog;
 using AI.Nova.Shared.Features.Diagnostic;
 using Microsoft.AspNetCore.SignalR.Client;
+using Microsoft.AspNetCore.Components.Web.Virtualization;
 
 namespace AI.Nova.Client.Core.Components.Pages.Management;
 
@@ -16,15 +17,17 @@ public partial class UsersPage
     private string? loadingUserKey;
     private string? userSearchText;
     private string? sessionSearchText;
-    private List<UserDto> allUsers = [];
     private bool isDeleteUserDialogOpen;
-    private BitNavItem? selectedUserItem;
+    private UserDto? selectedUserItem;
     private bool isLoadingOnlineUsersCount;
-    private List<BitNavItem> userNavItems = [];
     private bool isRevokeAllUserSessionsDialogOpen;
     private CancellationTokenSource? loadRoleDataCts;
     private List<UserSessionDto> allUserSessions = [];
     private List<UserSessionDto> filteredUserSessions = [];
+
+    private BitDataGrid<UserDto>? dataGrid;
+    private BitDataGridItemsProvider<UserDto> usersProvider = default!;
+    private bool allItemsLoaded;
 
 
     [AutoInject] IUserManagementController userManagementController = default!;
@@ -34,38 +37,68 @@ public partial class UsersPage
     {
         await base.OnInitAsync();
 
-        await RefreshData();
+        PrepareGridDataProvider();
+
+        await LoadOnlineUsersCount();
+    }
+
+
+    private void PrepareGridDataProvider()
+    {
+        usersProvider = async req =>
+        {
+            try
+            {
+                isLoadingUsers = true;
+                allItemsLoaded = false;
+
+                var query = new ODataQuery
+                {
+                    Top = req.Count ?? 10,
+                    Skip = req.StartIndex,
+                };
+
+                if (string.IsNullOrEmpty(userSearchText) is false)
+                {
+                    var search = userSearchText.ToLower();
+                    query.Filter = $"(contains(tolower({nameof(UserDto.FullName)}),'{search}') or " +
+                                   $"contains(tolower({nameof(UserDto.Email)}),'{search}') or " +
+                                   $"contains(tolower({nameof(UserDto.UserName)}),'{search}') or " +
+                                   $"contains(tolower({nameof(UserDto.PhoneNumber)}),'{search}'))";
+                }
+
+                var data = await userManagementController.WithQuery(query.ToString()).GetUsers(req.CancellationToken);
+
+                var items = data!.Items!;
+                var totalCount = (int)data!.TotalCount;
+
+                allItemsLoaded = totalCount > 0 && req.StartIndex + items.Length >= totalCount;
+
+                return BitDataGridItemsProviderResult.From(items, totalCount);
+            }
+            catch (OperationCanceledException)
+            {
+                return default;
+            }
+            catch (Exception exp)
+            {
+                ExceptionHandler.Handle(exp);
+                return BitDataGridItemsProviderResult.From(Array.Empty<UserDto>(), 0);
+            }
+            finally
+            {
+                isLoadingUsers = false;
+            }
+        };
     }
 
 
     private async Task RefreshData()
     {
         await Task.WhenAll(
-            LoadAllUsers(),
+            dataGrid!.RefreshDataAsync(),
             LoadOnlineUsersCount()
         );
-    }
-
-    private async Task LoadAllUsers()
-    {
-        if (isLoadingUsers) return;
-
-        try
-        {
-            isLoadingUsers = true;
-
-            allUsers = await userManagementController.GetAllUsers(CurrentCancellationToken);
-
-            SearchUsers();
-
-            allUserSessions = [];
-            selectedUserDto = new();
-            selectedUserItem = null;
-        }
-        finally
-        {
-            isLoadingUsers = false;
-        }
     }
 
     private async Task LoadOnlineUsersCount()
@@ -89,14 +122,14 @@ public partial class UsersPage
 
         if (await AuthManager.TryEnterElevatedAccessMode(CurrentCancellationToken) is false) return;
 
-        await userManagementController.Delete(Guid.Parse(selectedUserItem.Key!), CurrentCancellationToken);
+        await userManagementController.Delete(selectedUserItem.Id, CurrentCancellationToken);
 
-        await LoadAllUsers();
+        await RefreshData();
     }
 
-    private async Task HandleOnSelectUser(BitNavItem? item)
+    private async Task HandleOnSelectUser(UserDto? user)
     {
-        if (item is null) return;
+        if (user is null) return;
 
         try
         {
@@ -110,9 +143,8 @@ public partial class UsersPage
 
             loadRoleDataCts = new();
 
-            loadingUserKey = item.Key;
-            selectedUserItem = item;
-            var user = (item.Data as UserDto)!;
+            loadingUserKey = user.Id.ToString();
+            selectedUserItem = user;
 
             user.Patch(selectedUserDto);
 
@@ -122,7 +154,7 @@ public partial class UsersPage
         }
         finally
         {
-            if (loadingUserKey == item.Key)
+            if (loadingUserKey == user.Id.ToString())
             {
                 loadingUserKey = null;
             }
@@ -139,34 +171,20 @@ public partial class UsersPage
 
         await HandleOnSelectUser(selectedUserItem);
     }
-
     private async Task RevokeAllSessions()
     {
         if (selectedUserItem is null) return;
 
         if (await AuthManager.TryEnterElevatedAccessMode(CurrentCancellationToken) is false) return;
 
-        await userManagementController.RevokeAllUserSessions(Guid.Parse(selectedUserItem.Key!), CurrentCancellationToken);
+        await userManagementController.RevokeAllUserSessions(selectedUserItem.Id, CurrentCancellationToken);
 
         await HandleOnSelectUser(selectedUserItem);
     }
 
-    private void SearchUsers()
+    private async Task SearchUsers()
     {
-        var filteredUsers = allUsers;
-
-        if (string.IsNullOrWhiteSpace(userSearchText) is false)
-        {
-            var t = userSearchText.Trim();
-            filteredUsers = [.. allUsers.Where(u => ((u.FullName + u.Email + u.PhoneNumber + u.UserName) ?? string.Empty).Contains(t, StringComparison.InvariantCultureIgnoreCase))];
-        }
-
-        userNavItems = [.. filteredUsers.Select(u => new BitNavItem
-        {
-            Key = u.Id.ToString(),
-            Text = u.DisplayName ?? string.Empty,
-            Data = u
-        })];
+        await dataGrid!.RefreshDataAsync();
     }
 
     private void SearchSessions()

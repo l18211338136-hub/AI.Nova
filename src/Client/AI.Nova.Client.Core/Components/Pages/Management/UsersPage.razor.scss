@@ -19,7 +19,9 @@ section {
     .users-card {
         min-width: 15rem;
         max-width: 15rem;
-        overflow: hidden auto;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
     }
 
     .feat-card {
@@ -50,5 +52,77 @@ section {
         top: 1rem;
         position: absolute;
         inset-inline-end: 1rem;
+    }
+
+    .grid-container {
+        flex: 1;
+        overflow-y: auto;
+
+        thead {
+            display: none;
+        }
+
+        tr {
+            height: 4rem;
+        }
+
+        td {
+            padding: 0;
+            max-width: 0;
+            overflow: hidden;
+        }
+    }
+
+    .end-of-list-hint {
+        text-align: center;
+        padding: 1rem 0;
+        border-top: 1px dashed $bit-color-border-primary;
+        margin-top: 0.5rem;
+    }
+
+    .user-row-placeholder {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 0.4rem;
+        padding: 0.5rem;
+
+        .placeholder-line {
+            border-radius: 4px;
+            background: linear-gradient(90deg, $bit-color-background-secondary 25%, $bit-color-background-tertiary 50%, $bit-color-background-secondary 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.4s infinite;
+        }
+
+        .placeholder-name  { height: 14px; width: 60%; }
+        .placeholder-email { height: 12px; width: 80%; }
+    }
+
+    @keyframes shimmer {
+        0%   { background-position: 200% 0; }
+        100% { background-position: -200% 0; }
+    }
+
+    .user-row {
+        cursor: pointer;
+        padding: 0.5rem;
+        height: 4rem;
+        overflow: hidden;
+        transition: background-color 0.2s;
+
+        &:hover {
+            background-color: $bit-color-background-secondary;
+        }
+
+        &.selected {
+            background-color: $bit-color-background-secondary;
+            border-inline-start: 4px solid $bit-color-primary;
+        }
+    }
+
+    .user-name {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 }
