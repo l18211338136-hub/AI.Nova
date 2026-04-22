@@ -108,6 +108,10 @@ public partial class RoleManagementController : AppControllerBase, IRoleManageme
 
         foreach (var claim in claims)
         {
+            await DbContext.RoleClaims.IgnoreQueryFilters()
+                .Where(r => r.RoleId == role.Id && r.ClaimType == claim.ClaimType && r.ClaimValue == claim.ClaimValue)
+                .ExecuteDeleteAsync();
+
             var result = await roleManager.AddClaimAsync(role, new(claim.ClaimType!, claim.ClaimValue!));
 
             if (result.Succeeded is false)
@@ -187,6 +191,8 @@ public partial class RoleManagementController : AppControllerBase, IRoleManageme
         }
         else
         {
+            await DbContext.UserRoles.IgnoreQueryFilters().Where(u => u.UserId == user.Id && u.RoleId == role.Id).ExecuteDeleteAsync();
+
             var result = await userManager.AddToRoleAsync(user, role.Name!);
             if (result.Succeeded is false)
                 throw new ResourceValidationException(result.Errors.Select(e => new LocalizedString(e.Code, e.Description)).ToArray());
