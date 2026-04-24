@@ -20,7 +20,7 @@ public partial class RoleManagementController : AppControllerBase, IRoleManageme
     [AutoInject] private RoleManager<Role> roleManager = default!;
 
 
-    [HttpGet, EnableQuery]
+    [HttpGet, EnableQuery(PageSize = 100)]
     public IQueryable<RoleDto> GetAllRoles()
     {
         var isUserSuperAdmin = User.IsInRole(AppRoles.SuperAdmin);
@@ -30,7 +30,7 @@ public partial class RoleManagementController : AppControllerBase, IRoleManageme
                           .Project();
     }
 
-    [HttpGet, EnableQuery]
+    [HttpGet, EnableQuery(PageSize = 100)]
     public IQueryable<UserDto> GetAllUsers()
     {
         return userManager.Users
@@ -38,7 +38,7 @@ public partial class RoleManagementController : AppControllerBase, IRoleManageme
                           .Project();
     }
 
-    [HttpGet("{roleId}"), EnableQuery]
+    [HttpGet("{roleId}"), EnableQuery(PageSize = 100)]
     public IQueryable<UserDto> GetUsers(Guid roleId)
     {
         return userManager.Users.Where(u => u.Roles.Any(r => r.RoleId == roleId)).Project();
