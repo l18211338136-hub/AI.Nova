@@ -24,9 +24,6 @@ namespace AI.Nova.Server.Api.Migrations
             NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "vector");
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.HasSequence<int>("ProductShortId")
-                .StartsAt(10300L);
-
             modelBuilder.Entity("AI.Nova.Server.Api.Features.Addresses.Address", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1486,12 +1483,8 @@ namespace AI.Nova.Server.Api.Migrations
                         .HasComment("主图片的替代文本 (Alt Text)");
 
                     b.Property<int>("ShortId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .HasDefaultValueSql("nextval('\"ProductShortId\"')")
                         .HasComment("用于生成友好 URL 的短整型 ID");
-
-                    NpgsqlPropertyBuilderExtensions.UseSequence(b.Property<int>("ShortId"), "ProductShortId");
 
                     b.Property<uint>("Version")
                         .IsConcurrencyToken()
@@ -1503,12 +1496,6 @@ namespace AI.Nova.Server.Api.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
-
-                    b.HasIndex("ShortId")
-                        .IsUnique();
 
                     b.ToTable("Products", null, t =>
                         {

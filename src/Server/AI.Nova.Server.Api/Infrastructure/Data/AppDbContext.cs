@@ -1,4 +1,4 @@
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using AI.Nova.Server.Api.Features.AreaCodes;
 using AI.Nova.Server.Api.Features.Attachments;
 using AI.Nova.Server.Api.Features.Categories;
@@ -58,9 +58,9 @@ public partial class AppDbContext(DbContextOptions<AppDbContext> options, ICurre
 
         modelBuilder.OnHangfireModelCreating("jobs");
 
-        modelBuilder.HasSequence<int>("ProductShortId")
-            .StartsAt(10_300)
-            .IncrementsBy(1);
+        //modelBuilder.HasSequence<int>("ProductShortId")
+        //    .StartsAt(10_300)
+        //    .IncrementsBy(1);
 
 
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);

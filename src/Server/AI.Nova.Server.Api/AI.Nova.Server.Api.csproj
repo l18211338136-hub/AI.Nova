@@ -108,7 +108,6 @@
 
     <ItemGroup>
       <Folder Include="Features\Addresses\" />
-      <Folder Include="Migrations\" />
       <Folder Include="wwwroot\products\" />
     </ItemGroup>
 
