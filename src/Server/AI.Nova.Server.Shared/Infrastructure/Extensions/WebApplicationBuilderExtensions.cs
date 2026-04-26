@@ -1,4 +1,4 @@
-﻿using System.IO.Compression;
+using System.IO.Compression;
 using System.Net;
 using Azure.Monitor.OpenTelemetry.Profiler;
 using Azure.Monitor.OpenTelemetry.AspNetCore;
@@ -48,20 +48,32 @@ public static class WebApplicationBuilderExtensions
         }
 
 
-        services
-            .AddFusionCache()
-            .AsHybridCache()
-            .WithRegisteredMemoryCache()
-            .WithDefaultEntryOptions(options => options.Size = 1)
+        // Add default Redis connection for Hangfire, SignalR backplane, and distributed locking (persistence Redis with AOF)
+        builder.AddRedisClient("redis-persistent", settings => settings.DisableTracing = true);
+
+        // Add optional Redis connection for caching (ephemeral Redis without persistence)
+        builder.AddKeyedRedisClient("redis-cache", settings => settings.DisableTracing = true /*FusionCache is already handling cache traces*/);
+
+        services.AddFusionCache()
             // Auto-clone cached objects to avoid further issues after scaling out and switching to distributed caching.
-            .WithOptions(options => options.DefaultEntryOptions.EnableAutoClone = true)
+            .WithOptions(opt => opt.DefaultEntryOptions.EnableAutoClone = true)
+            // Use Redis backplane for cache synchronization across multiple server instances
+            .WithDistributedCache(sp =>
+               new Caching.StackExchangeRedis.RedisCache(new Caching.StackExchangeRedis.RedisCacheOptions
+               {
+                   ConnectionMultiplexerFactory = async () => sp.GetRequiredKeyedService<StackExchange.Redis.IConnectionMultiplexer>("redis-cache"),
+               })
+            )
+            .WithBackplane(sp => new ZiggyCreatures.Caching.Fusion.Backplane.StackExchangeRedis.RedisBackplane(
+                new ZiggyCreatures.Caching.Fusion.Backplane.StackExchangeRedis.RedisBackplaneOptions
+                {
+                    ConnectionMultiplexerFactory = async () => sp.GetRequiredKeyedService<StackExchange.Redis.IConnectionMultiplexer>("redis-cache"),
+                }))
             .WithSerializer(new FusionCacheSystemTextJsonSerializer())
             .WithCacheKeyPrefix("AI.Nova:Cache:");
 
         services.AddFusionOutputCache(); // For ASP.NET Core Output Caching with FusionCache
 
-        // Registering Microsoft's IDistributedCache here doesn't mean you have to use it in your code. It's only for libraries that might rely on it.
-        services.AddDistributedMemoryCache();
 
         services.AddHttpContextAccessor();
 

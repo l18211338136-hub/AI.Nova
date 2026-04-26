@@ -9,6 +9,8 @@
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="Aspire.StackExchange.Redis" />
+        <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" />
         <PackageReference Include="NWebsec.AspNetCore.Middleware" />
         <PackageReference Include="AspNetCore.HealthChecks.System" />
         <PackageReference Include="AspNetCore.HealthChecks.UI.Client" />
@@ -29,6 +31,7 @@
         <PackageReference Include="OpenTelemetry.Resources.OperatingSystem" />
         <PackageReference Include="OpenTelemetry.Resources.Process" />
         <PackageReference Include="OpenTelemetry.Resources.ProcessRuntime" />
+        <PackageReference Include="ZiggyCreatures.FusionCache.Backplane.StackExchangeRedis" />
         <PackageReference Include="ZiggyCreatures.FusionCache.OpenTelemetry" />
         <PackageReference Include="ZiggyCreatures.FusionCache.AspNetCore.OutputCaching" />
         <PackageReference Include="ZiggyCreatures.FusionCache.Serialization.SystemTextJson" />

@@ -1,4 +1,4 @@
-﻿using System.ClientModel.Primitives;
+using System.ClientModel.Primitives;
 using System.Net;
 using System.Net.Mail;
 using AdsPush;
@@ -36,6 +36,8 @@ using Microsoft.OpenApi;
 using Npgsql;
 using PhoneNumbers;
 using Twilio;
+using Hangfire.Redis.StackExchange;
+using StackExchange.Redis;
 using AI.Nova.Server.Api.Features.Knowledge;
 
 namespace AI.Nova.Server.Api;
@@ -151,7 +153,7 @@ public static partial class Program
         // Register distributed lock factory
         services.AddTransient(sp => new DistributedLockFactory((string lockKey) =>
         {
-            return new Medallion.Threading.FileSystem.FileDistributedLock(new(Path.Combine(Path.GetTempPath(), $"AI.Nova-{lockKey}.lock")));
+            return new Medallion.Threading.Redis.RedisDistributedLock(lockKey, sp.GetRequiredService<IConnectionMultiplexer>().GetDatabase());
         }));
 
         services.AddSingleton<ServerExceptionHandler>();
@@ -239,9 +241,17 @@ public static partial class Program
 
         if (string.IsNullOrEmpty(configuration["Azure:SignalR:ConnectionString"]) is false)
         {
-            signalRBuilder.AddAzureSignalR(options =>
+             signalRBuilder.AddAzureSignalR(options =>
+             {
+                 configuration.GetRequiredSection("Azure:SignalR").Bind(options);
+             });
+        }
+        else
+        {
+            // Use Redis as SignalR backplane for scaling out across multiple server instances
+            signalRBuilder.AddStackExchangeRedis(configuration.GetRequiredConnectionString("redis-cache"), options =>
             {
-                configuration.GetRequiredSection("Azure:SignalR").Bind(options);
+                options.Configuration.ChannelPrefix = RedisChannel.Literal("AI.Nova:SignalR:");
             });
         }
 
@@ -472,10 +482,10 @@ public static partial class Program
         {
             if (appSettings.Hangfire?.UseIsolatedStorage is not true)
             {
-                hangfireConfiguration.UseEFCoreStorage(AddDbContext, new()
+                hangfireConfiguration.UseRedisStorage(sp.GetRequiredService<IConnectionMultiplexer>(), new RedisStorageOptions
                 {
-                    Schema = "jobs",
-                    QueuePollInterval = new TimeSpan(0, 0, 1)
+                    Prefix = "AI.Nova:Hangfire:",
+                    Db = 1, // Use a dedicated Redis database for Hangfire
                 });
             }
             else
