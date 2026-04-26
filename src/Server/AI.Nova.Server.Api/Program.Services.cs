@@ -92,6 +92,7 @@ public static partial class Program
         services.AddScoped<IDataSeeder, ProductImageSeeder>();
         services.AddScoped<IDataSeeder, OrderSeeder>();
         services.AddScoped<IDataSeeder, CartSeeder>();
+        services.AddScoped<IDataSeeder, KnowledgeBaseSeeder>();
 
         services.AddSingleton(_ => PhoneNumberUtil.GetInstance());
         services.AddSingleton<IBlobStorage>(sp =>
