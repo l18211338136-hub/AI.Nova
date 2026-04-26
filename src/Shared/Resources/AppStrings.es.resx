@@ -1310,4 +1310,34 @@ Después de alcanzar {0}, los inicios de sesión adicionales tendrán funciones 
   <data name="ImageNotCarError" xml:space="preserve">
     <value>La imagen proporcionada no contiene un automóvil.</value>
   </data>
+  <data name="KnowledgeBase" xml:space="preserve"><value>Base de conocimientos</value></data>
+  <data name="KnowledgeBases" xml:space="preserve"><value>Bases de conocimientos</value></data>
+  <data name="KnowledgeDocument" xml:space="preserve"><value>Documento</value></data>
+  <data name="KnowledgeDocuments" xml:space="preserve"><value>Documentos</value></data>
+  <data name="KnowledgePageTitle" xml:space="preserve"><value>Gestión de base de conocimientos</value></data>
+  <data name="AddKnowledgeBase" xml:space="preserve"><value>Añadir base de conocimientos</value></data>
+  <data name="DeleteKnowledgeBase" xml:space="preserve"><value>Eliminar base de conocimientos</value></data>
+  <data name="SearchKnowledgeBasesPlaceholder" xml:space="preserve"><value>Buscar bases de conocimientos...</value></data>
+  <data name="AddDocument" xml:space="preserve"><value>Añadir documento</value></data>
+  <data name="DeleteDocument" xml:space="preserve"><value>Eliminar documento</value></data>
+  <data name="SearchDocumentsPlaceholder" xml:space="preserve"><value>Buscar documentos...</value></data>
+  <data name="NoKnowledgeBaseSelected" xml:space="preserve"><value>Por favor, seleccione una base de conocimientos.</value></data>
+  <data name="Actions" xml:space="preserve"><value>Acciones</value></data>
+  <data name="PleaseSelectAKnowledgeBaseToViewDetails" xml:space="preserve"><value>Seleccione una base de conocimientos para ver los detalles.</value></data>
+  <data name="Browse" xml:space="preserve"><value>Explorar</value></data>
+  <data name="FileUploadedSuccessfully" xml:space="preserve"><value>Archivo subido con éxito.</value></data>
+  <data name="SelectDocumentsPlaceholder" xml:space="preserve"><value>Seleccione los documentos para subir.</value></data>
+  <data name="EnterKnowledgeBaseName" xml:space="preserve"><value>Ingrese el nombre de la base de conocimientos</value></data>
+  <data name="View" xml:space="preserve"><value>Ver</value></data>
+  <data name="Close" xml:space="preserve"><value>Cerrar</value></data>
+  <data name="Tokens" xml:space="preserve"><value>Tokens</value></data>
+  <data name="Content" xml:space="preserve"><value>Contenido</value></data>
+  <data name="DragDropOrSelectFiles" xml:space="preserve"><value>Arrastrar y soltar o seleccionar archivos</value></data>
+  <data name="Download" xml:space="preserve"><value>Descargar</value></data>
+  <data name="RecallTest" xml:space="preserve"><value>Prueba de recuperación</value></data>
+  <data name="RecallTestPlaceholder" xml:space="preserve"><value>Ingrese una consulta para probar la recuperación semántica...</value></data>
+  <data name="Document" xml:space="preserve"><value>Documento</value></data>
+  <data name="DocumentName" xml:space="preserve"><value>Nombre del documento</value></data>
+  <data name="VectorWeight" xml:space="preserve"><value>Peso del vector</value></data>
+  <data name="Search" xml:space="preserve"><value>Buscar</value></data>
 </root>

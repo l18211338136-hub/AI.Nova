@@ -1310,4 +1310,34 @@
   <data name="ImageNotCarError" xml:space="preserve">
     <value>الصورة المقدمة لا تحتوي على سيارة.</value>
   </data>
+  <data name="KnowledgeBase" xml:space="preserve"><value>قاعدة المعرفة</value></data>
+  <data name="KnowledgeBases" xml:space="preserve"><value>قواعد المعرفة</value></data>
+  <data name="KnowledgeDocument" xml:space="preserve"><value>مستند</value></data>
+  <data name="KnowledgeDocuments" xml:space="preserve"><value>مستندات</value></data>
+  <data name="KnowledgePageTitle" xml:space="preserve"><value>إدارة قاعدة المعرفة</value></data>
+  <data name="AddKnowledgeBase" xml:space="preserve"><value>إضافة قاعدة معرفة</value></data>
+  <data name="DeleteKnowledgeBase" xml:space="preserve"><value>حذف قاعدة المعرفة</value></data>
+  <data name="SearchKnowledgeBasesPlaceholder" xml:space="preserve"><value>البحث في قواعد المعرفة...</value></data>
+  <data name="AddDocument" xml:space="preserve"><value>إضافة مستند</value></data>
+  <data name="DeleteDocument" xml:space="preserve"><value>حذف مستند</value></data>
+  <data name="SearchDocumentsPlaceholder" xml:space="preserve"><value>البحث في المستندات...</value></data>
+  <data name="NoKnowledgeBaseSelected" xml:space="preserve"><value>يرجى تحديد قاعدة معرفة.</value></data>
+  <data name="Actions" xml:space="preserve"><value>إجراءات</value></data>
+  <data name="PleaseSelectAKnowledgeBaseToViewDetails" xml:space="preserve"><value>يرجى تحديد قاعدة معرفة لعرض التفاصيل.</value></data>
+  <data name="Browse" xml:space="preserve"><value>تصفح</value></data>
+  <data name="FileUploadedSuccessfully" xml:space="preserve"><value>تم رفع الملف بنجاح.</value></data>
+  <data name="SelectDocumentsPlaceholder" xml:space="preserve"><value>يرجى اختيار المستندات لرفعها.</value></data>
+  <data name="EnterKnowledgeBaseName" xml:space="preserve"><value>أدخل اسم قاعدة المعرفة</value></data>
+  <data name="View" xml:space="preserve"><value>عرض</value></data>
+  <data name="Close" xml:space="preserve"><value>إغلاق</value></data>
+  <data name="Tokens" xml:space="preserve"><value>الرموز</value></data>
+  <data name="Content" xml:space="preserve"><value>المحتوى</value></data>
+  <data name="DragDropOrSelectFiles" xml:space="preserve"><value>سحب وإفلات أو اختيار الملفات</value></data>
+  <data name="Download" xml:space="preserve"><value>تحميل</value></data>
+  <data name="RecallTest" xml:space="preserve"><value>اختبار الاستدعاء</value></data>
+  <data name="RecallTestPlaceholder" xml:space="preserve"><value>أدخل استعلامًا لاختبار الاستدعاء الدلالي...</value></data>
+  <data name="Document" xml:space="preserve"><value>وثيقة</value></data>
+  <data name="DocumentName" xml:space="preserve"><value>اسم المستند</value></data>
+  <data name="VectorWeight" xml:space="preserve"><value>نسبة المتجهات</value></data>
+  <data name="Search" xml:space="preserve"><value>بحث</value></data>
 </root>

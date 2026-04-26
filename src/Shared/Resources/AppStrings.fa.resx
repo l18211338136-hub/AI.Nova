@@ -1310,4 +1310,34 @@
     <data name="ImageNotCarError" xml:space="preserve">
     <value>تصویر ارائه شده حاوی ماشین نیست.</value>
   </data>
+  <data name="KnowledgeBase" xml:space="preserve"><value>پایگاه دانش</value></data>
+  <data name="KnowledgeBases" xml:space="preserve"><value>پایگاههای دانش</value></data>
+  <data name="KnowledgeDocument" xml:space="preserve"><value>سند</value></data>
+  <data name="KnowledgeDocuments" xml:space="preserve"><value>اسناد</value></data>
+  <data name="KnowledgePageTitle" xml:space="preserve"><value>مدیریت پایگاه دانش</value></data>
+  <data name="AddKnowledgeBase" xml:space="preserve"><value>افزودن پایگاه دانش</value></data>
+  <data name="DeleteKnowledgeBase" xml:space="preserve"><value>حذف پایگاه دانش</value></data>
+  <data name="SearchKnowledgeBasesPlaceholder" xml:space="preserve"><value>جستجوی پایگاه دانش...</value></data>
+  <data name="AddDocument" xml:space="preserve"><value>افزودن سند</value></data>
+  <data name="DeleteDocument" xml:space="preserve"><value>حذف سند</value></data>
+  <data name="SearchDocumentsPlaceholder" xml:space="preserve"><value>جستجوی اسناد...</value></data>
+  <data name="NoKnowledgeBaseSelected" xml:space="preserve"><value>لطفا یک پایگاه دانش انتخاب کنید.</value></data>
+  <data name="Actions" xml:space="preserve"><value>عملیات</value></data>
+  <data name="PleaseSelectAKnowledgeBaseToViewDetails" xml:space="preserve"><value>لطفا برای مشاهده جزئیات یک پایگاه دانش انتخاب کنید.</value></data>
+  <data name="Browse" xml:space="preserve"><value>جستجو</value></data>
+  <data name="FileUploadedSuccessfully" xml:space="preserve"><value>فایل با موفقیت آپلود شد.</value></data>
+  <data name="SelectDocumentsPlaceholder" xml:space="preserve"><value>لطفاً اسناد را برای آپلود انتخاب کنید.</value></data>
+  <data name="EnterKnowledgeBaseName" xml:space="preserve"><value>نام پایگاه دانش را وارد کنید</value></data>
+  <data name="View" xml:space="preserve"><value>مشاهده</value></data>
+  <data name="Close" xml:space="preserve"><value>بستن</value></data>
+  <data name="Tokens" xml:space="preserve"><value>توکن‌ها</value></data>
+  <data name="Content" xml:space="preserve"><value>محتوا</value></data>
+  <data name="DragDropOrSelectFiles" xml:space="preserve"><value>کشیدن و رها کردن یا انتخاب فایل‌ها</value></data>
+  <data name="Download" xml:space="preserve"><value>دانلود</value></data>
+  <data name="RecallTest" xml:space="preserve"><value>تست بازیابی</value></data>
+  <data name="RecallTestPlaceholder" xml:space="preserve"><value>برای تست بازیابی معنایی، یک پرس‌وجو وارد کنید...</value></data>
+  <data name="Document" xml:space="preserve"><value>مستند</value></data>
+  <data name="DocumentName" xml:space="preserve"><value>نام سند</value></data>
+  <data name="VectorWeight" xml:space="preserve"><value>وزن بردار</value></data>
+  <data name="Search" xml:space="preserve"><value>جستجو</value></data>
 </root>

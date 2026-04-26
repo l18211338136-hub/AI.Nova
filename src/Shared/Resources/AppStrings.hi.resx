@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- +:cnd:noEmit -->
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -118,7 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <!-- .NET Validation messages -->
   <data name="CompareAttribute_ValidationError" xml:space="preserve">
     <value>'{0}' और '{1}' मेल नहीं खाते।</value>
   </data>
@@ -140,7 +138,6 @@
   <data name="PhoneAttribute_ValidationError" xml:space="preserve">
     <value>{0} फ़ील्ड एक वैध फ़ोन नंबर नहीं है।</value>
   </data>
-  <!-- Exceptions -->
   <data name="BadRequestException" xml:space="preserve">
     <value>अमान्य अनुरोध</value>
   </data>
@@ -177,7 +174,6 @@
   <data name="ServerConnectionException" xml:space="preserve">
     <value>सर्वर से कनेक्ट करने में असमर्थ।</value>
   </data>
-  <!-- AI.Nova strings -->
   <data name="Active" xml:space="preserve">
     <value>सक्रिय</value>
   </data>
@@ -690,7 +686,7 @@
     <value>अलग उपयोगकर्ता के रूप में साइन इन करें</value>
   </data>
   <data name="YouAreSignedInAs" xml:space="preserve">
-    <value>आप {0} के रूप में साइन इन हैं</value>
+    <value>आप के रूप में साइन इन हैं</value>
   </data>
   <data name="ForgotPasswordLink" xml:space="preserve">
     <value>पासवर्ड भूल गए?</value>
@@ -1309,5 +1305,95 @@
   </data>
   <data name="ImageNotCarError" xml:space="preserve">
     <value>प्रदान की गई छवि में कार नहीं है।</value>
+  </data>
+  <data name="KnowledgeBase" xml:space="preserve">
+    <value>जञनकष</value>
+  </data>
+  <data name="KnowledgeBases" xml:space="preserve">
+    <value>जञनकष</value>
+  </data>
+  <data name="KnowledgeDocument" xml:space="preserve">
+    <value>दसतवज</value>
+  </data>
+  <data name="KnowledgeDocuments" xml:space="preserve">
+    <value>दसतवज</value>
+  </data>
+  <data name="KnowledgePageTitle" xml:space="preserve">
+    <value>जञनकष परबधन</value>
+  </data>
+  <data name="AddKnowledgeBase" xml:space="preserve">
+    <value>जञनकष जड</value>
+  </data>
+  <data name="DeleteKnowledgeBase" xml:space="preserve">
+    <value>जञनकष हटए</value>
+  </data>
+  <data name="SearchKnowledgeBasesPlaceholder" xml:space="preserve">
+    <value>जञनकष खज...</value>
+  </data>
+  <data name="AddDocument" xml:space="preserve">
+    <value>दसतवज जड</value>
+  </data>
+  <data name="DeleteDocument" xml:space="preserve">
+    <value>दसतवज हटए</value>
+  </data>
+  <data name="SearchDocumentsPlaceholder" xml:space="preserve">
+    <value>दसतवज खज...</value>
+  </data>
+  <data name="NoKnowledgeBaseSelected" xml:space="preserve">
+    <value>कपय एक जञनकष चन</value>
+  </data>
+  <data name="PleaseSelectAKnowledgeBaseToViewDetails" xml:space="preserve">
+    <value>ववरण दखन क लए कपय एक जञन आधर चन</value>
+  </data>
+  <data name="Actions" xml:space="preserve">
+    <value>करयए</value>
+  </data>
+  <data name="Browse" xml:space="preserve">
+    <value>ब्राउज़ करें</value>
+  </data>
+  <data name="FileUploadedSuccessfully" xml:space="preserve">
+    <value>फ़ाइल सफलतापूर्वक अपलोड की गई।</value>
+  </data>
+  <data name="SelectDocumentsPlaceholder" xml:space="preserve">
+    <value>कृपया अपलोड करने के लिए दस्तावेज़ चुनें।</value>
+  </data>
+  <data name="EnterKnowledgeBaseName" xml:space="preserve">
+    <value>ज्ञान आधार नाम दर्ज करें</value>
+  </data>
+  <data name="View" xml:space="preserve">
+    <value>देखें</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>बंद करें</value>
+  </data>
+  <data name="Tokens" xml:space="preserve">
+    <value>टोकन</value>
+  </data>
+  <data name="Content" xml:space="preserve">
+    <value>सामग्री</value>
+  </data>
+  <data name="DragDropOrSelectFiles" xml:space="preserve">
+    <value>फ़ाइलें खींचें और छोड़ें या चुनें</value>
+  </data>
+  <data name="Download" xml:space="preserve">
+    <value>डाउनलोड</value>
+  </data>
+  <data name="RecallTest" xml:space="preserve">
+    <value>रिकॉल टेस्ट</value>
+  </data>
+  <data name="RecallTestPlaceholder" xml:space="preserve">
+    <value>सिमेंटिक रिकॉल का परीक्षण करने के लिए क्वेری दर्ज करें...</value>
+  </data>
+  <data name="Document" xml:space="preserve">
+    <value>दस्तावेज़</value>
+  </data>
+  <data name="DocumentName" xml:space="preserve">
+    <value>दस्तावेज़ का नाम</value>
+  </data>
+  <data name="VectorWeight" xml:space="preserve">
+    <value>वेक्टर वजन</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>खोज</value>
   </data>
 </root>

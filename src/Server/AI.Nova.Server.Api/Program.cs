@@ -1,4 +1,4 @@
-﻿using AI.Nova.Server.Api.Infrastructure.Data.Seed;
+using AI.Nova.Server.Api.Infrastructure.Data.Seed;
 
 namespace AI.Nova.Server.Api;
 
@@ -23,7 +23,7 @@ public static partial class Program
         {
             await using var scope = app.Services.CreateAsyncScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-            await dbContext.Database.EnsureCreatedAsync(); // It's recommended to start using ef-core migrations.
+            await dbContext.Database.MigrateAsync();
 
             var seedDataService = scope.ServiceProvider.GetRequiredService<SeedDataService>();
             await seedDataService.SeedAsync();

@@ -1310,4 +1310,34 @@ After reaching {0}, extra sign-ins will have reduced functions.</value>
     <data name="ImageNotCarError" xml:space="preserve">
     <value>The provided image does not contain a car.</value>
   </data>
+  <data name="KnowledgeBase" xml:space="preserve"><value>Knowledge base</value></data>
+  <data name="KnowledgeBases" xml:space="preserve"><value>Knowledge bases</value></data>
+  <data name="KnowledgeDocument" xml:space="preserve"><value>Document</value></data>
+  <data name="KnowledgeDocuments" xml:space="preserve"><value>Documents</value></data>
+  <data name="KnowledgePageTitle" xml:space="preserve"><value>Knowledge Base Management</value></data>
+  <data name="AddKnowledgeBase" xml:space="preserve"><value>Add knowledge base</value></data>
+  <data name="DeleteKnowledgeBase" xml:space="preserve"><value>Delete knowledge base</value></data>
+  <data name="SearchKnowledgeBasesPlaceholder" xml:space="preserve"><value>Search knowledge bases...</value></data>
+  <data name="AddDocument" xml:space="preserve"><value>Add document</value></data>
+  <data name="DeleteDocument" xml:space="preserve"><value>Delete document</value></data>
+  <data name="SearchDocumentsPlaceholder" xml:space="preserve"><value>Search documents...</value></data>
+  <data name="NoKnowledgeBaseSelected" xml:space="preserve"><value>Please select a knowledge base.</value></data>
+  <data name="PleaseSelectAKnowledgeBaseToViewDetails" xml:space="preserve"><value>Please select a knowledge base to view details.</value></data>
+  <data name="Actions" xml:space="preserve"><value>Actions</value></data>
+  <data name="Browse" xml:space="preserve"><value>Browse</value></data>
+  <data name="FileUploadedSuccessfully" xml:space="preserve"><value>File uploaded successfully.</value></data>
+  <data name="SelectDocumentsPlaceholder" xml:space="preserve"><value>Please select documents to upload.</value></data>
+  <data name="EnterKnowledgeBaseName" xml:space="preserve"><value>Enter knowledge base name</value></data>
+  <data name="View" xml:space="preserve"><value>View</value></data>
+  <data name="Close" xml:space="preserve"><value>Close</value></data>
+  <data name="Tokens" xml:space="preserve"><value>Tokens</value></data>
+  <data name="Content" xml:space="preserve"><value>Content</value></data>
+  <data name="DragDropOrSelectFiles" xml:space="preserve"><value>Drag and drop or select files</value></data>
+  <data name="Download" xml:space="preserve"><value>Download</value></data>
+  <data name="RecallTest" xml:space="preserve"><value>Recall Test</value></data>
+  <data name="RecallTestPlaceholder" xml:space="preserve"><value>Enter a query to test semantic recall...</value></data>
+  <data name="Document" xml:space="preserve"><value>Document</value></data>
+  <data name="DocumentName" xml:space="preserve"><value>Document name</value></data>
+  <data name="VectorWeight" xml:space="preserve"><value>Vector Weight</value></data>
+  <data name="Search" xml:space="preserve"><value>Search</value></data>
 </root>

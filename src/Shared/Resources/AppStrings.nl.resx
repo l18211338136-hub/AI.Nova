@@ -1310,4 +1310,34 @@ Na het bereiken van {0} zullen extra aanmeldingen verminderde functies hebben.</
   <data name="ImageNotCarError" xml:space="preserve">
     <value>De opgegeven afbeelding bevat geen auto.</value>
   </data>
+  <data name="KnowledgeBase" xml:space="preserve"><value>Kennisbank</value></data>
+  <data name="KnowledgeBases" xml:space="preserve"><value>Kennisbanken</value></data>
+  <data name="KnowledgeDocument" xml:space="preserve"><value>Document</value></data>
+  <data name="KnowledgeDocuments" xml:space="preserve"><value>Documenten</value></data>
+  <data name="KnowledgePageTitle" xml:space="preserve"><value>Kennisbankbeheer</value></data>
+  <data name="AddKnowledgeBase" xml:space="preserve"><value>Kennisbank toevoegen</value></data>
+  <data name="DeleteKnowledgeBase" xml:space="preserve"><value>Kennisbank verwijderen</value></data>
+  <data name="SearchKnowledgeBasesPlaceholder" xml:space="preserve"><value>Kennisbanken zoeken...</value></data>
+  <data name="AddDocument" xml:space="preserve"><value>Document toevoegen</value></data>
+  <data name="DeleteDocument" xml:space="preserve"><value>Document verwijderen</value></data>
+  <data name="SearchDocumentsPlaceholder" xml:space="preserve"><value>Documenten zoeken...</value></data>
+  <data name="NoKnowledgeBaseSelected" xml:space="preserve"><value>Selecteer een kennisbank.</value></data>
+  <data name="Actions" xml:space="preserve"><value>Acties</value></data>
+  <data name="PleaseSelectAKnowledgeBaseToViewDetails" xml:space="preserve"><value>Selecteer een kennisbank om details te bekijken.</value></data>
+  <data name="Browse" xml:space="preserve"><value>Bladeren</value></data>
+  <data name="FileUploadedSuccessfully" xml:space="preserve"><value>Bestand succesvol geüpload.</value></data>
+  <data name="SelectDocumentsPlaceholder" xml:space="preserve"><value>Selecteer documenten om te uploaden.</value></data>
+  <data name="EnterKnowledgeBaseName" xml:space="preserve"><value>Voer naam van kennisbank in</value></data>
+  <data name="View" xml:space="preserve"><value>Bekijken</value></data>
+  <data name="Close" xml:space="preserve"><value>Sluiten</value></data>
+  <data name="Tokens" xml:space="preserve"><value>Tokens</value></data>
+  <data name="Content" xml:space="preserve"><value>Inhoud</value></data>
+  <data name="DragDropOrSelectFiles" xml:space="preserve"><value>Sleep bestanden hierheen of selecteer ze</value></data>
+  <data name="Download" xml:space="preserve"><value>Downloaden</value></data>
+  <data name="RecallTest" xml:space="preserve"><value>Recall-test</value></data>
+  <data name="RecallTestPlaceholder" xml:space="preserve"><value>Voer een zoekopdracht in om de semantische recall te testen...</value></data>
+  <data name="Document" xml:space="preserve"><value>Document</value></data>
+  <data name="DocumentName" xml:space="preserve"><value>Documentnaam</value></data>
+  <data name="VectorWeight" xml:space="preserve"><value>Vector gewicht</value></data>
+  <data name="Search" xml:space="preserve"><value>Zoeken</value></data>
 </root>

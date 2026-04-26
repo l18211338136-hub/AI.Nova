@@ -4,6 +4,7 @@ using AI.Nova.Shared.Features.Products;
 using AI.Nova.Shared.Features.Categories;
 using AI.Nova.Shared.Features.Chatbot;
 using AI.Nova.Shared.Infrastructure.Dtos.SignalR;
+using AI.Nova.Shared.Features.Knowledge;
 using AI.Nova.Shared.Features.Statistics;
 using AI.Nova.Shared.Features.Diagnostic;
 using AI.Nova.Shared.Features.Identity.Dtos;
@@ -51,6 +52,16 @@ namespace AI.Nova.Shared.Infrastructure.Dtos;
 [JsonSerializable(typeof(PagedResponse<UserDto>))]
 [JsonSerializable(typeof(UserSessionDto))]
 [JsonSerializable(typeof(List<UserSessionDto>))]
+
+[JsonSerializable(typeof(KnowledgeBaseDto))]
+[JsonSerializable(typeof(PagedResponse<KnowledgeBaseDto>))]
+[JsonSerializable(typeof(List<KnowledgeBaseDto>))]
+[JsonSerializable(typeof(KnowledgeDocumentDto))]
+[JsonSerializable(typeof(PagedResponse<KnowledgeDocumentDto>))]
+[JsonSerializable(typeof(List<KnowledgeDocumentDto>))]
+[JsonSerializable(typeof(KnowledgeDocumentChunkDto))]
+[JsonSerializable(typeof(PagedResponse<KnowledgeDocumentChunkDto>))]
+[JsonSerializable(typeof(List<KnowledgeDocumentChunkDto>))]
 
 [JsonSerializable(typeof(DiagnosticLogDto[]))]
 [JsonSerializable(typeof(StartChatRequest))]

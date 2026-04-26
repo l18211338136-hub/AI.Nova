@@ -1,0 +1,325 @@
+@using AI.Nova.Shared.Features.Knowledge
+@using Bit.BlazorUI
+@attribute [Route(PageUrls.KnowledgeBase)]
+@attribute [Route("{culture?}" + PageUrls.KnowledgeBase)]
+@attribute [Authorize(Policy = AppFeatures.Management.ManageKnowledge)]
+@inherits AppPageBase
+
+<AppPageData Title="@Localizer[nameof(AppStrings.KnowledgeBases)]"
+             PageTitle="@Localizer[nameof(AppStrings.KnowledgePageTitle)]" />
+
+<section>
+    <BitStack Style="min-width:fit-content">
+        <BitStack Horizontal FitHeight VerticalAlign="BitAlignment.Center">
+            <BitText>@Localizer[nameof(AppStrings.KnowledgeBases)]</BitText>
+            <BitButton AutoLoading IconOnly
+                       IconName="@BitIconName.Refresh"
+                       OnClick="WrapHandled(SearchKnowledgeBases)" />
+            <BitSpacer />
+            <BitButton IconName="@BitIconName.Add" 
+                       OnClick="WrapHandled(ShowAddKnowledgeBaseDialog)">@Localizer[nameof(AppStrings.AddKnowledgeBase)]</BitButton>
+        </BitStack>
+
+        <BitStack Horizontal Style="height:calc(100% - 49px)">
+            <BitCard Class="kb-card page-card" NoShadow FullHeight>
+                <BitSearchBox @bind-Value="kbSearchText"
+                             Underlined
+                             Placeholder="@Localizer[nameof(AppStrings.SearchKnowledgeBasesPlaceholder)]"
+                             OnSearch="WrapHandled(SearchKnowledgeBases)"
+                             OnClear="WrapHandled(SearchKnowledgeBases)"
+                             Styles="@(new() { InputContainer = "width:100%" })" />
+                
+                <div class="grid-container">
+                    <BitDataGrid ItemsProvider="kbProvider" @ref="dataGrid" TGridItem="KnowledgeBaseDto" Virtualize="true">
+                        <BitDataGridTemplateColumn Context="kb">
+                            <div class="kb-row @(selectedKnowledgeBase?.Id == kb.Id ? "selected" : "")" @onclick="WrapHandled(async () => await HandleOnSelectKnowledgeBase(kb))">
+                                <BitStack Gap="0">
+                                    <BitText Class="kb-name">@kb.Name</BitText>
+                                    <BitText Color="BitColor.SecondaryForeground" Typography="BitTypography.Body2" Class="kb-desc-line">
+                                        @kb.Description
+                                    </BitText>
+                                </BitStack>
+                            </div>
+                        </BitDataGridTemplateColumn>
+                    </BitDataGrid>
+                </div>
+            </BitCard>
+
+            <BitCard Class="feat-card page-card" NoShadow FullSize>
+                @if (selectedKnowledgeBase is null)
+                {
+                    <div class="empty-selection">
+                        <BitStack HorizontalAlign="BitAlignment.Center" VerticalAlign="BitAlignment.Center" Gap="2.5rem">
+                            <div class="empty-visual">
+                                <div class="icon-ring"></div>
+                                <BitIcon IconName="@BitIconName.ReadingMode" />
+                            </div>
+                            <BitStack Gap="0.5rem" HorizontalAlign="BitAlignment.Center">
+                                <BitText Typography="BitTypography.H5" Style="font-weight: 700;">@Localizer[nameof(AppStrings.NoKnowledgeBaseSelected)]</BitText>
+                                <BitText Typography="BitTypography.Subtitle1" Style="opacity: 0.6;">@Localizer[nameof(AppStrings.PleaseSelectAKnowledgeBaseToViewDetails)]</BitText>
+                            </BitStack>
+                        </BitStack>
+                    </div>
+                }
+                else
+                {
+                    <BitPivot>
+                        <BitPivotItem HeaderText="@Localizer[nameof(AppStrings.General)]">
+                            <BitStack Gap="2rem" Style="padding: 1.5rem;">
+                                <BitStack Horizontal VerticalAlign="BitAlignment.End">
+                                    <BitText Typography="BitTypography.H6">@Localizer[nameof(AppStrings.Id)]:</BitText>
+                                    <BitTag Color="BitColor.TertiaryBackground" Size="BitSize.Large" Class="selectable">
+                                        @selectedKnowledgeBase.Id.ToString()
+                                    </BitTag>
+                                </BitStack>
+
+                                <BitStack Gap="1.5rem">
+                                    <BitTextField @bind-Value="selectedKnowledgeBase.Name"
+                                                 Label="@Localizer[nameof(AppStrings.Name)]"
+                                                 Styles="@(new() { FieldGroup = "width: 100%" })" />
+                                    
+                                    <BitTextField @bind-Value="selectedKnowledgeBase.Description"
+                                                 Label="@Localizer[nameof(AppStrings.Description)]"
+                                                 Multiline="true" Rows="4"
+                                                 Styles="@(new() { FieldGroup = "width: 100%" })" />
+                                </BitStack>
+
+                                <BitStack Horizontal HorizontalAlign="BitAlignment.End" Gap="1rem" Style="margin-top: 1rem;">
+                                    <BitButton Color="BitColor.Error" 
+                                               IconName="@BitIconName.Delete" 
+                                               OnClick="() => isDeleteKnowledgeBaseDialogOpen = true">
+                                        @Localizer[nameof(AppStrings.DeleteKnowledgeBase)]
+                                    </BitButton>
+                                    <BitButton Color="BitColor.Primary" 
+                                               IconName="@BitIconName.Save"
+                                               OnClick="WrapHandled(UpdateKnowledgeBase)">
+                                        @Localizer[nameof(AppStrings.Save)]
+                                    </BitButton>
+                                </BitStack>
+                            </BitStack>
+                        </BitPivotItem>
+
+                        <BitPivotItem HeaderText="@Localizer[nameof(AppStrings.KnowledgeDocuments)]">
+                            <BitStack Gap="1.5rem" Style="padding: 1.5rem;">
+                                <BitStack Horizontal HorizontalAlign="BitAlignment.SpaceBetween" VerticalAlign="BitAlignment.Center" Gap="1rem">
+                                    <BitSearchBox @bind-Value="docSearchText" 
+                                                 Underlined
+                                                 Immediate
+                                                 DebounceTime="300"
+                                                 OnSearch="WrapHandled(SearchDocuments)" 
+                                                 OnClear="WrapHandled(SearchDocuments)" 
+                                                 Placeholder="@Localizer[nameof(AppStrings.SearchDocumentsPlaceholder)]" 
+                                                 Style="width: 100%" />
+                                    <BitButton IconName="@BitIconName.Add" OnClick="WrapHandled(ShowAddDocumentDialog)" Style="white-space: nowrap">@Localizer[nameof(AppStrings.AddDocument)]</BitButton>
+                                </BitStack>
+                                
+                                <div class="grid-container docs-grid">
+                                    <BitDataGrid ItemsProvider="docProvider" @ref="docGrid" TGridItem="KnowledgeDocumentDto" Virtualize="true" Class="docs-grid">
+                                        <BitDataGridPropertyColumn Property="d => d.Title" Title="@Localizer[nameof(AppStrings.Title)]" Sortable="true" Class="title-col" />
+                                        <BitDataGridTemplateColumn Title="@Localizer[nameof(AppStrings.Actions)]" Align="BitDataGridAlign.Center" Class="actions-col">
+                                            <BitStack Horizontal Gap="0.5rem" HorizontalAlign="BitAlignment.End">
+                                                <BitButton IconOnly IconName="@BitIconName.EntryView" Variant="BitVariant.Text" Title="@Localizer[nameof(AppStrings.View)]" OnClick="WrapHandled(() => ShowDocumentDetailDialog(context))" />
+                                                <BitButton IconOnly IconName="@BitIconName.Download" Variant="BitVariant.Text" Title="@Localizer[nameof(AppStrings.Download)]" OnClick="WrapHandled(() => DownloadDocument(context))" />
+                                                <BitButton IconOnly IconName="@BitIconName.Delete" Variant="BitVariant.Text" Color="BitColor.Error" OnClick="WrapHandled(() => DeleteDocument(context))" />
+                                            </BitStack>
+                                        </BitDataGridTemplateColumn>
+                                    </BitDataGrid>
+                                </div>
+                            </BitStack>
+                        </BitPivotItem>
+
+                        <BitPivotItem HeaderText="@Localizer[nameof(AppStrings.RecallTest)]">
+                            <BitStack Gap="1.5rem" Style="padding: 1.5rem;">
+                                <BitStack Horizontal VerticalAlign="BitAlignment.Center" Gap="2.5rem">
+                                    <BitSearchBox @bind-Value="recallSearchText" 
+                                                 OnSearch="WrapHandled(SearchRecall)" 
+                                                 OnClear="WrapHandled(SearchRecall)"
+                                                 Placeholder="@Localizer[nameof(AppStrings.RecallTestPlaceholder)]" 
+                                                 Style="flex-grow: 1" />
+                                    
+                                    <BitSearchBox @bind-Value="recallDocumentName" 
+                                                 OnSearch="WrapHandled(SearchRecall)" 
+                                                 OnClear="WrapHandled(SearchRecall)"
+                                                 Placeholder="@Localizer[nameof(AppStrings.DocumentName)]" 
+                                                 Style="width: 200px" />
+
+                                    <BitStack Horizontal VerticalAlign="BitAlignment.Center" Gap="0.5rem">
+                                        <BitLabel Style="white-space: nowrap">@Localizer[nameof(AppStrings.VectorWeight)]: @((int)(vectorWeight * 100))%</BitLabel>
+                                        <BitSlider @bind-Value="vectorWeight" Min="0" Max="1" Step="0.05" Style="width: 150px" />
+                                    </BitStack>
+                                </BitStack>
+
+
+                                
+                                <div class="grid-container recall-grid">
+                                    <BitDataGrid ItemsProvider="recallProvider" @ref="recallGrid" TGridItem="KnowledgeDocumentChunkDto" Virtualize="true">
+                                        <Columns>
+                                            <BitDataGridTemplateColumn Class="expand-col" Context="chunk">
+                                                <BitButton Variant="BitVariant.Text" Size="BitSize.Small"
+                                                           IconName="@(expandedChunkIds.Contains(chunk.Id) ? BitIconName.ChevronDown : BitIconName.ChevronRight)"
+                                                           OnClick="@(() => ToggleChunkExpand(chunk.Id))" />
+                                            </BitDataGridTemplateColumn>
+                                              <BitDataGridTemplateColumn Title="@Localizer[nameof(AppStrings.Document)]" Sortable="true" Class="title-col" Context="chunk">
+                                                 <div class="title-wrapper" title="@chunk.DocumentTitle">
+                                                     @chunk.DocumentTitle
+                                                 </div>
+                                              </BitDataGridTemplateColumn>
+                                            <BitDataGridPropertyColumn Property="c => c.Index" Title="#" Class="index-col" Sortable="true" />
+                                            <BitDataGridPropertyColumn Property="c => c.Score" Title="Score" Class="score-col" Sortable="true" Format="F4" />
+                                            <BitDataGridTemplateColumn Title="@Localizer[nameof(AppStrings.Content)]" Class="content-col" Context="chunk">
+                                                <div class="content-preview">
+                                                    @chunk.Content
+                                                </div>
+                                            </BitDataGridTemplateColumn>
+                                        </Columns>
+                                        <RowTemplate Context="args">
+                                            @args.OriginalRow
+                                            @if (expandedChunkIds.Contains(args.RowItem.Id))
+                                            {
+                                                <tr class="expand-row">
+                                                    <td colspan="5">
+                                                        <div class="expand-content">
+                                                            <BitMarkdownViewer NoPrerender Markdown="@args.RowItem.Content" Class="kb-md-viewer" JsMiddlewareIdentifier="App.sanitizeHtml" />
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </RowTemplate>
+                                    </BitDataGrid>
+                                </div>
+                            </BitStack>
+                        </BitPivotItem>
+                    </BitPivot>
+
+                    <BitButton AutoLoading IconOnly
+                               Class="refresh-selected-btn"
+                               IconName="@BitIconName.Refresh"
+                               IsEnabled="selectedKnowledgeBase is not null"
+                               OnClick="WrapHandled(async () => await HandleOnSelectKnowledgeBase(selectedKnowledgeBase))" />
+                }
+            </BitCard>
+        </BitStack>
+    </BitStack>
+</section>
+
+<BitDialog @bind-IsOpen="isDeleteKnowledgeBaseDialogOpen" 
+           OnOk="WrapHandled(DeleteKnowledgeBase)"
+           Title="@Localizer[nameof(AppStrings.DeleteKnowledgeBase)]"
+           OkText="@Localizer[nameof(AppStrings.Delete)]"
+           CancelText="@Localizer[nameof(AppStrings.Cancel)]"
+           Message="@Localizer[nameof(AppStrings.AreYouSureWannaDelete)]" />
+
+@* 新增知识库弹窗 *@
+<BitModal @bind-IsOpen="isAddKnowledgeBaseDialogOpen"
+          AutoToggleScroll="false" Blocking
+          Draggable DragElementSelector=".header-stack">
+    <section>
+        <BitStack Class="modal-main-stack">
+            <BitStack VerticalAlign="BitAlignment.Center" Class="header-stack" Horizontal>
+                <BitText>@Localizer[nameof(AppStrings.AddKnowledgeBase)]</BitText>
+                <BitSpacer />
+                <BitButton IconOnly FixedColor
+                           Variant="BitVariant.Text"
+                           IconName="@BitIconName.Cancel"
+                           Color="BitColor.SecondaryBackground"
+                           OnClick="() => isAddKnowledgeBaseDialogOpen = false" />
+            </BitStack>
+            <BitCard Class="modal-content-card">
+                <EditForm Model="newKnowledgeBase" OnValidSubmit="WrapHandled(AddKnowledgeBase)">
+                    <DataAnnotationsValidator />
+                    <BitStack Gap="1.25rem">
+                        <BitTextField @bind-Value="newKnowledgeBase.Name" 
+                                     Label="@Localizer[nameof(AppStrings.Name)]" 
+                                     Placeholder="@Localizer[nameof(AppStrings.EnterKnowledgeBaseName)]"
+                                     Required="true"
+                                     Styles="@(new() { Root = "width: 100%" })" />
+                        
+                        <BitTextField @bind-Value="newKnowledgeBase.Description" 
+                                     Label="@Localizer[nameof(AppStrings.Description)]" 
+                                     Multiline="true" Rows="4"
+                                     Styles="@(new() { Root = "width: 100%" })" />
+                        
+                        <BitStack Horizontal Class="modal-action-stack">
+                            <BitButton Type="BitButtonType.Button" OnClick="() => isAddKnowledgeBaseDialogOpen = false" Variant="BitVariant.Outline">
+                                @Localizer[nameof(AppStrings.Cancel)]
+                            </BitButton>
+                            <BitButton Type="BitButtonType.Submit">
+                                @Localizer[nameof(AppStrings.Save)]
+                            </BitButton>
+                        </BitStack>
+                    </BitStack>
+                </EditForm>
+            </BitCard>
+        </BitStack>
+    </section>
+</BitModal>
+
+@* 新增文档弹窗 - 对标新增产品上传效果 *@
+<BitModal @bind-IsOpen="isAddDocumentDialogOpen"
+          AutoToggleScroll="false" Blocking
+          Draggable DragElementSelector=".header-stack">
+    <section>
+        <BitStack Class="modal-main-stack">
+            <BitStack VerticalAlign="BitAlignment.Center" Class="header-stack" Horizontal>
+                <BitText>@Localizer[nameof(AppStrings.AddDocument)]</BitText>
+                <BitSpacer />
+                <BitButton IconOnly FixedColor
+                           Variant="BitVariant.Text"
+                           IconName="@BitIconName.Cancel"
+                           Color="BitColor.SecondaryBackground"
+                           OnClick="() => isAddDocumentDialogOpen = false" />
+            </BitStack>
+            <BitCard Class="modal-content-card">
+                <BitStack Gap="2rem">
+                    <BitFileUpload @ref="fileUploadRef"
+                                   AutoUpload
+                                   HideFileView="true"
+                                   MaxSize="1024 * 1024 * 50" 
+                                   UploadUrlProvider="GetUploadDocumentUrl"
+                                   OnUploadComplete="WrapHandled(HandleOnDocumentUploadComplete)"
+                                   OnUploadFailed="HandleOnDocumentUploadFailed"
+                                   UploadRequestHttpHeadersProvider="WrapHandled(GetUploadRequestHeaders)">
+                        <LabelTemplate>
+                            <div class="drag-drop-container" @onclick="() => fileUploadRef.Browse()">
+                                <BitIcon IconName="@BitIconName.CloudUpload" Class="upload-icon" />
+                                <BitText Class="upload-text">@Localizer[nameof(AppStrings.DragDropOrSelectFiles)]</BitText>
+                            </div>
+                        </LabelTemplate>
+                    </BitFileUpload>
+                    
+                </BitStack>
+            </BitCard>
+        </BitStack>
+    </section>
+</BitModal>
+
+@* 文档详情弹窗 *@
+<BitModal @bind-IsOpen="isDocumentDetailDialogOpen"
+          AutoToggleScroll="false" Blocking
+          Draggable DragElementSelector=".header-stack">
+    <section>
+        <BitStack Class="modal-main-stack" Style="min-width: 800px; max-width: 95vw; max-height: 90vh; display: flex; flex-direction: column;">
+            <BitStack VerticalAlign="BitAlignment.Center" Class="header-stack" Horizontal>
+                <BitText>@selectedDocument?.Title</BitText>
+                <BitSpacer />
+                <BitButton IconOnly FixedColor
+                           Variant="BitVariant.Text"
+                           IconName="@BitIconName.Cancel"
+                           Color="BitColor.SecondaryBackground"
+                           OnClick="() => isDocumentDetailDialogOpen = false" />
+            </BitStack>
+            <BitCard Class="modal-content-card" Style="padding: 1.5rem !important; flex: 1; overflow-y: auto;">
+                <BitStack Gap="1.5rem">
+                    <div class="grid-container docs-grid" style="height: 500px; background-color: white; border-radius: 4px; border: 1px solid #e5e5e5;">
+                        <BitDataGrid ItemsProvider="chunkProvider" @ref="chunkGrid" TGridItem="KnowledgeDocumentChunkDto" Virtualize="true">
+                            <BitDataGridTemplateColumn Title="@Localizer[nameof(AppStrings.Content)]">
+                                <BitMarkdownViewer NoPrerender Markdown="@context.Content" Class="kb-md-viewer" JsMiddlewareIdentifier="App.sanitizeHtml" />
+                            </BitDataGridTemplateColumn>
+                            <BitDataGridPropertyColumn Property="c => c.TokenCount" Title="@Localizer[nameof(AppStrings.Tokens)]" Align="BitDataGridAlign.Center" Class="tokens-col" />
+                        </BitDataGrid>
+                    </div>
+                </BitStack>
+            </BitCard>
+        </BitStack>
+    </section>
+</BitModal>

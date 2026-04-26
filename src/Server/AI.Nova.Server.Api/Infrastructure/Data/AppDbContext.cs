@@ -16,6 +16,7 @@ using AI.Nova.Server.Api.Infrastructure.Services.Contracts;
 using Hangfire.EntityFrameworkCore;
 using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
+using AI.Nova.Server.Api.Features.Knowledge;
 
 namespace AI.Nova.Server.Api.Infrastructure.Data;
 
@@ -46,6 +47,10 @@ public partial class AppDbContext(DbContextOptions<AppDbContext> options, ICurre
     public DbSet<CartItem> CartItems { get; set; } = default!;
 
     public DbSet<DataProtectionKey> DataProtectionKeys { get; set; } = default!;
+
+    public DbSet<KnowledgeDocument> KnowledgeDocuments { get; set; } = default!;
+    public DbSet<KnowledgeBase> KnowledgeBases { get; set; } = default!;
+    public DbSet<KnowledgeDocumentChunk> KnowledgeDocumentChunks { get; set; } = default!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

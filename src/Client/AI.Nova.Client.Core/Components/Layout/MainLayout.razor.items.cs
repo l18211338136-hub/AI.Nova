@@ -1,4 +1,4 @@
-﻿namespace AI.Nova.Client.Core.Components.Layout;
+namespace AI.Nova.Client.Core.Components.Layout;
 
 public partial class MainLayout
 {
@@ -88,11 +88,12 @@ public partial class MainLayout
             Url = PageUrls.About,
         });
 
-        var (manageRoles, manageUsers, manageAiPrompt) = await (authorizationService.IsAuthorized(authUser!, AppFeatures.Management.ManageRoles),
+        var (manageRoles, manageUsers, manageAiPrompt, manageKnowledge) = await (authorizationService.IsAuthorized(authUser!, AppFeatures.Management.ManageRoles),
             authorizationService.IsAuthorized(authUser!, AppFeatures.Management.ManageUsers),
-            authorizationService.IsAuthorized(authUser!, AppFeatures.Management.ManageAiPrompt));
+            authorizationService.IsAuthorized(authUser!, AppFeatures.Management.ManageAiPrompt),
+            authorizationService.IsAuthorized(authUser!, AppFeatures.Management.ManageKnowledge));
 
-        if (manageRoles || manageUsers || manageAiPrompt)
+        if (manageRoles || manageUsers || manageAiPrompt || manageKnowledge)
         {
             BitNavItem managementItem = new()
             {
@@ -130,6 +131,16 @@ public partial class MainLayout
                     Text = localizer[nameof(AppStrings.SystemPromptsTitle)],
                     IconName = BitIconName.TextDocumentSettings,
                     Url = PageUrls.SystemPrompts,
+                });
+            }
+
+            if (manageKnowledge)
+            {
+                managementItem.ChildItems.Add(new()
+                {
+                    Text = localizer[nameof(AppStrings.KnowledgeBase)],
+                    IconName = BitIconName.Server,
+                    Url = PageUrls.KnowledgeBase,
                 });
             }
         }

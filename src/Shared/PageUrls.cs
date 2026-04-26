@@ -29,5 +29,7 @@ public static partial class PageUrls
 
     public const string Users = "/users";
 
+    public const string KnowledgeBase = "/knowledge-base";
+
     public const string WebInteropApp = "/web-interop-app.html";
 }

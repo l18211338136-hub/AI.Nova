@@ -1,4 +1,4 @@
-﻿namespace AI.Nova.Shared.Infrastructure.Services;
+namespace AI.Nova.Shared.Infrastructure.Services;
 
 /// <summary>
 /// Values for the <see cref="AppClaimTypes.FEATURES"/>
@@ -19,6 +19,8 @@ public class AppFeatures
         public const string ManageRoles = "1.1";
 
         public const string ManageUsers = "1.2";
+
+        public const string ManageKnowledge = "1.3";
     }
 
     public class System

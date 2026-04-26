@@ -1310,4 +1310,34 @@
   <data name="ImageNotCarError" xml:space="preserve">
     <value>提供的图像不包含汽车。</value>
   </data>
+  <data name="KnowledgeBase" xml:space="preserve"><value>知识库</value></data>
+  <data name="KnowledgeBases" xml:space="preserve"><value>知识库</value></data>
+  <data name="KnowledgeDocument" xml:space="preserve"><value>文档</value></data>
+  <data name="KnowledgeDocuments" xml:space="preserve"><value>文档清单</value></data>
+  <data name="KnowledgePageTitle" xml:space="preserve"><value>知识库管理</value></data>
+  <data name="AddKnowledgeBase" xml:space="preserve"><value>添加知识库</value></data>
+  <data name="DeleteKnowledgeBase" xml:space="preserve"><value>删除知识库</value></data>
+  <data name="SearchKnowledgeBasesPlaceholder" xml:space="preserve"><value>搜索知识库...</value></data>
+  <data name="AddDocument" xml:space="preserve"><value>添加文档</value></data>
+  <data name="DeleteDocument" xml:space="preserve"><value>删除文档</value></data>
+  <data name="SearchDocumentsPlaceholder" xml:space="preserve"><value>搜索文档...</value></data>
+  <data name="NoKnowledgeBaseSelected" xml:space="preserve"><value>请先选择一个知识库。</value></data>
+  <data name="Actions" xml:space="preserve"><value>操作</value></data>
+  <data name="PleaseSelectAKnowledgeBaseToViewDetails" xml:space="preserve"><value>请选择一个知识库以查看详情。</value></data>
+  <data name="Browse" xml:space="preserve"><value>浏览</value></data>
+  <data name="FileUploadedSuccessfully" xml:space="preserve"><value>文件上传成功。</value></data>
+  <data name="SelectDocumentsPlaceholder" xml:space="preserve"><value>请选择要上传的文档。</value></data>
+  <data name="EnterKnowledgeBaseName" xml:space="preserve"><value>输入知识库名称</value></data>
+  <data name="View" xml:space="preserve"><value>查看</value></data>
+  <data name="Close" xml:space="preserve"><value>关闭</value></data>
+  <data name="Tokens" xml:space="preserve"><value>令牌数</value></data>
+  <data name="Content" xml:space="preserve"><value>内容</value></data>
+  <data name="DragDropOrSelectFiles" xml:space="preserve"><value>拖放或选择文件</value></data>
+  <data name="Download" xml:space="preserve"><value>下载</value></data>
+  <data name="RecallTest" xml:space="preserve"><value>召回测试</value></data>
+  <data name="RecallTestPlaceholder" xml:space="preserve"><value>输入关键词进行语义召回测试...</value></data>
+  <data name="Document" xml:space="preserve"><value>文档</value></data>
+  <data name="DocumentName" xml:space="preserve"><value>文档名称</value></data>
+  <data name="VectorWeight" xml:space="preserve"><value>向量占比</value></data>
+  <data name="Search" xml:space="preserve"><value>搜索</value></data>
 </root>

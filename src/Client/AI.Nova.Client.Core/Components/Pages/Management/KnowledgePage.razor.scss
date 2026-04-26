@@ -1,0 +1,379 @@
+@import '../../../Styles/abstracts/_media-queries.scss';
+@import '../../../Styles/abstracts/_bit-css-variables.scss';
+
+section {
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+
+    @include lt-md {
+        height: calc(#{$bit-env-height-available} - 10.5rem);
+    }
+}
+
+::deep {
+    /* 列表与详情基础样式 */
+    .kb-card {
+        min-width: 18rem;
+        max-width: 18rem;
+        display: flex;
+        flex-direction: column;
+        border-right: 1px solid $bit-color-border-secondary;
+    }
+
+    .feat-card {
+        overflow: auto;
+        min-width: 32rem;
+        position: relative;
+    }
+
+    .page-card {
+        @include gt-sm {
+            height: calc(#{$bit-env-height-available} - 10rem);
+        }
+    }
+
+    .grid-container {
+        flex: 1;
+        overflow-y: auto;
+
+        thead {
+            display: none;
+        }
+
+        &.docs-grid,
+        &.recall-grid {
+            width: 100%;
+            height: 100%;
+
+            thead {
+                display: table-header-group;
+            }
+
+            .title-col {
+                flex-grow: 1;
+                vertical-align: middle;
+                min-width: 0;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+
+                .title-wrapper {
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+            }
+
+            /* 针对召回测试表格的特殊调整 */
+            &.recall-grid {
+                .title-col {
+                    flex-grow: 0;
+                    width: 220px;
+                    max-width: 220px;
+                }
+
+                .content-col {
+                    flex-grow: 1;
+                    min-width: 0;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+            }
+
+            .actions-col {
+                width: 120px;
+                vertical-align: middle;
+                text-align: right;
+
+                & > ::deep .bit-stk {
+                    justify-content: flex-end;
+                }
+            }
+
+            .expand-col {
+                width: 48px;
+                vertical-align: middle;
+            }
+
+            .index-col {
+                width: 60px;
+                vertical-align: middle;
+            }
+
+            .score-col {
+                width: 100px;
+                vertical-align: middle;
+            }
+
+            .content-col {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                max-width: 0;
+                padding-inline-start: 16px;
+                vertical-align: middle;
+
+                .content-preview {
+                    height: 48px;
+                    display: flex;
+                    align-items: center;
+                    color: $bit-color-foreground-secondary;
+                    font-size: 0.9rem;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    display: block; /* 覆盖 display: flex 以便让 text-overflow 生效，或确保内容是块级的 */
+                    line-height: 48px;
+                }
+            }
+
+            .expand-row {
+                background-color: #fcfcfc;
+                border-bottom: 4px solid $bit-color-background-secondary;
+
+                td {
+                    padding: 0 !important;
+                }
+
+                .expand-content {
+                    padding: 1.5rem 3rem;
+                    border-inline-start: 4px solid $bit-color-primary;
+                    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.02);
+                    max-height: 400px;
+                    overflow-y: auto;
+                    /* 精致滚动条 */
+                    &::-webkit-scrollbar {
+                        width: 4px;
+                    }
+
+                    &::-webkit-scrollbar-thumb {
+                        background: rgba(0, 0, 0, 0.1);
+                        border-radius: 2px;
+                    }
+
+                    ::deep .kb-md-viewer {
+                        /* 强效精致化：通过 kb-md-viewer 穿透组件隔离 */
+                        font-size: 1rem !important;
+                        line-height: 1.6 !important;
+                        color: $bit-color-foreground-primary !important;
+
+                        * {
+                            font-size: inherit !important;
+                        }
+
+                        h1,
+                        h2,
+                        h3 {
+                            margin-top: 1rem !important;
+                            margin-bottom: 0.5rem !important;
+                            font-weight: 700 !important;
+                            color: $bit-color-primary !important;
+                        }
+
+                        p {
+                            margin-bottom: 1rem !important;
+                        }
+
+                        pre {
+                            background-color: #f0f0f0 !important;
+                            padding: 1rem !important;
+                            border-radius: 4px;
+                        }
+
+                        ul,
+                        ol {
+                            padding-left: 1.5rem !important;
+                            margin-bottom: 1rem !important;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .kb-row {
+        cursor: pointer;
+        padding: 0.5rem 1rem;
+        height: 4rem;
+        display: flex;
+        align-items: center;
+        border-bottom: 1px solid $bit-color-border-tertiary;
+
+        &:hover {
+            background-color: $bit-color-background-secondary;
+        }
+
+        &.selected {
+            background-color: $bit-color-background-secondary;
+            border-inline-start: 4px solid $bit-color-primary;
+        }
+
+        .kb-name {
+            font-weight: 600;
+            color: $bit-color-foreground-primary;
+        }
+
+        .kb-desc-line {
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+    }
+    /* 空状态提示 */
+    .empty-selection {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: radial-gradient(circle at center, rgba($bit-color-primary, 0.05) 0%, transparent 70%);
+
+        .empty-visual {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            .icon-ring {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                border-radius: 50%;
+                border: 2px dashed rgba($bit-color-primary, 0.2);
+                animation: spin 20s linear infinite;
+            }
+
+            i {
+                font-size: 4rem;
+                color: $bit-color-primary;
+            }
+        }
+    }
+    /* 刷新按钮对标用户页面布局 */
+    .refresh-selected-btn {
+        top: 1rem;
+        right: 1rem;
+        position: absolute;
+        z-index: 10;
+    }
+    /* 弹窗设计提升：等比例放大策略 */
+    .modal-main-stack {
+        padding: 2rem;
+        /*        min-width: 580px;
+        max-width: 650px;*/
+    }
+
+    .header-stack {
+        padding: 0.5rem 0 2rem 0;
+
+        .bit-txt {
+            font-size: 26px;
+            font-weight: 700;
+        }
+    }
+    /* 内部灰色卡片等比例放大 */
+    .modal-content-card {
+        padding: 2.5rem !important;
+        background-color: #f7f7f7 !important;
+        border: 1px solid #e5e5e5;
+        border-radius: 6px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+
+        .bit-txt-fld {
+            margin-bottom: 1.5rem;
+            width: 100%;
+
+            label {
+                font-size: 18px;
+                font-weight: 700;
+                margin-bottom: 0.75rem;
+                display: block;
+            }
+
+            .bit-txt-fld-grp {
+                border: 1px solid #c8c8c8;
+                border-radius: 4px;
+                background-color: #ffffff;
+                height: 46px;
+
+                input {
+                    font-size: 16px;
+                }
+            }
+
+            textarea {
+                height: auto !important;
+                min-height: 140px;
+                font-size: 16px;
+            }
+        }
+        /* 底部按钮等比例放大 */
+        .modal-action-stack {
+            margin-top: 2.5rem;
+            display: flex;
+            gap: 1.25rem;
+            justify-content: flex-start;
+
+            .bit-btn {
+                min-width: 110px;
+                height: 44px;
+                font-size: 16px;
+                font-weight: 700;
+                border-radius: 6px;
+            }
+        }
+    }
+    /* 极致对齐：对标“新增产品”大尺寸拖拽区域 */
+    .drag-drop-container {
+        padding: 1rem;
+        background-color: #ffffff;
+        border: 2px dashed #dcdcdc;
+        border-radius: 8px;
+        transition: all 0.2s ease-in-out;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 240px;
+
+        &:hover {
+            border-color: var(--bit-clr-pri);
+            background-color: rgba(var(--bit-clr-pri-rgb), 0.05);
+            /* 模拟悬浮感 */
+        }
+
+        .upload-icon {
+            font-size: 80px;
+            color: #999999;
+            margin-bottom: 1rem;
+        }
+
+        .upload-text {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--bit-clr-pri);
+        }
+    }
+    /* 覆盖 BitFileUpload 内部默认按钮，使其在拖拽区域下更美观 */
+    .bit-upl {
+        .bit-upl-pic {
+            border: none;
+            background: transparent;
+            padding: 0;
+            min-height: unset;
+        }
+    }
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}

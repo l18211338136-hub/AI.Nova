@@ -1,4 +1,4 @@
-using System.ClientModel.Primitives;
+﻿using System.ClientModel.Primitives;
 using System.Net;
 using System.Net.Mail;
 using AdsPush;
@@ -36,6 +36,7 @@ using Microsoft.OpenApi;
 using Npgsql;
 using PhoneNumbers;
 using Twilio;
+using AI.Nova.Server.Api.Features.Knowledge;
 
 namespace AI.Nova.Server.Api;
 
@@ -72,6 +73,7 @@ public static partial class Program
             .WithToolsFromAssembly();
         services.AddScoped<Infrastructure.SignalR.AppChatbot>();
         services.AddScoped<ProductEmbeddingService>();
+        services.AddScoped<KnowledgeEmbeddingService>();
         if (appSettings.Sms?.Configured is true)
         {
             TwilioClient.Init(appSettings.Sms.TwilioAccountSid, appSettings.Sms.TwilioAutoToken);
