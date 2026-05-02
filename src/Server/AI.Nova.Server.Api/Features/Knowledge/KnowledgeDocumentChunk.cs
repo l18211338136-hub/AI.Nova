@@ -1,4 +1,4 @@
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 using AI.Nova.Server.Api.Infrastructure.Data.Audit;
 using Pgvector;
 
@@ -9,7 +9,9 @@ public class KnowledgeDocumentChunk : AuditEntity, IAuditableEntity, ISoftDelete
     public Guid Id { get; set; }
     
     public string? Content { get; set; }
-    
+
+    public string? RawContent { get; set; }
+
     public int? TokenCount { get; set; }
     
     public int? Index { get; set; }

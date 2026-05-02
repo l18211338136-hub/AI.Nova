@@ -168,7 +168,7 @@
                                             <BitDataGridPropertyColumn Property="c => c.Score" Title="Score" Class="score-col" Sortable="true" Format="F4" />
                                             <BitDataGridTemplateColumn Title="@Localizer[nameof(AppStrings.Content)]" Class="content-col" Context="chunk">
                                                 <div class="content-preview">
-                                                    @chunk.Content
+                                                    @chunk.RawContent
                                                 </div>
                                             </BitDataGridTemplateColumn>
                                         </Columns>
@@ -179,7 +179,7 @@
                                                 <tr class="expand-row">
                                                     <td colspan="5">
                                                         <div class="expand-content">
-                                                            <BitMarkdownViewer NoPrerender Markdown="@args.RowItem.Content" Class="kb-md-viewer" JsMiddlewareIdentifier="App.sanitizeHtml" />
+                                                            <BitMarkdownViewer NoPrerender Markdown="@args.RowItem.RawContent" Class="kb-md-viewer" JsMiddlewareIdentifier="App.sanitizeHtml" />
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -313,7 +313,7 @@
                     <div class="grid-container docs-grid" style="height: 500px; background-color: white; border-radius: 4px; border: 1px solid #e5e5e5;">
                         <BitDataGrid ItemsProvider="chunkProvider" @ref="chunkGrid" TGridItem="KnowledgeDocumentChunkDto" Virtualize="true">
                             <BitDataGridTemplateColumn Title="@Localizer[nameof(AppStrings.Content)]">
-                                <BitMarkdownViewer NoPrerender Markdown="@context.Content" Class="kb-md-viewer" JsMiddlewareIdentifier="App.sanitizeHtml" />
+                                <BitMarkdownViewer NoPrerender Markdown="@context.RawContent" Class="kb-md-viewer" JsMiddlewareIdentifier="App.sanitizeHtml" />
                             </BitDataGridTemplateColumn>
                             <BitDataGridPropertyColumn Property="c => c.TokenCount" Title="@Localizer[nameof(AppStrings.Tokens)]" Align="BitDataGridAlign.Center" Class="tokens-col" />
                         </BitDataGrid>

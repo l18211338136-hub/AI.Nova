@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Pgvector.EntityFrameworkCore;
 using AI.Nova.Server.Api.Infrastructure.Data;
 

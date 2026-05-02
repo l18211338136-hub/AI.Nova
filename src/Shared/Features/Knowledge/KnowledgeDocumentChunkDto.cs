@@ -1,4 +1,4 @@
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace AI.Nova.Shared.Features.Knowledge;
 
@@ -9,6 +9,7 @@ public partial class KnowledgeDocumentChunkDto
 
     [Required(ErrorMessageResourceType = typeof(AppStrings), ErrorMessageResourceName = nameof(AppStrings.RequiredAttribute_ValidationError))]
     public string? Content { get; set; }
+    public string? RawContent { get; set; }
 
     public int TokenCount { get; set; }
 

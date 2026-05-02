@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace AI.Nova.Server.Api.Features.Knowledge;
 
-public class KnowledgeBaseSeeder : IDataSeeder
+public class KnowledgeBaseSeeder(KnowledgeEmbeddingService embeddingService) : IDataSeeder
 {
     private const string KnowledgeBaseName = "系统文档";
     private const string DocumentTitle = "数据库架构";
@@ -57,6 +57,7 @@ public class KnowledgeBaseSeeder : IDataSeeder
         var model = dbContext.GetService<IDesignTimeModel>().Model;
         var entityTypes = model.GetEntityTypes().OrderBy(e => e.Name);
         var index = 0;
+        var chunks = new List<KnowledgeDocumentChunk>();
 
         foreach (var entity in entityTypes)
         {
@@ -132,12 +133,19 @@ public class KnowledgeBaseSeeder : IDataSeeder
             {
                 Id = Guid.NewGuid(),
                 DocumentId = doc.Id,
-                Content = sb.ToString(),
+                RawContent = sb.ToString(),
+                Content = tableComment,
                 Index = index++,
                 TokenCount = sb.Length / 4 
             };
 
-            await dbContext.KnowledgeDocumentChunks.AddAsync(chunk, cancellationToken);
+            await embeddingService.Embed(chunk, cancellationToken);
+            chunks.Add(chunk);
+        }
+
+        if (chunks.Any())
+        {
+            await dbContext.KnowledgeDocumentChunks.AddRangeAsync(chunks, cancellationToken);
         }
 
         await dbContext.SaveChangesAsync(cancellationToken);

@@ -8,6 +8,7 @@ public partial class KnowledgeEmbeddingService
     [AutoInject] private IHostEnvironment env = default!;
     [AutoInject] private AppDbContext dbContext = default!;
     [AutoInject] private IEmbeddingGenerator<string, Embedding<float>> embeddingGenerator = default!;
+    [AutoInject] private ILogger<KnowledgeEmbeddingService> logger = default!;
 
     public async Task Embed(KnowledgeDocumentChunk chunk, CancellationToken cancellationToken)
     {
@@ -16,8 +17,17 @@ public partial class KnowledgeEmbeddingService
 
         if (string.IsNullOrWhiteSpace(chunk.Content)) return;
 
-        var embeddedResponse = await embeddingGenerator.GenerateAsync(chunk.Content, cancellationToken: cancellationToken);
-        chunk.Embedding = new Pgvector.Vector(embeddedResponse.Vector);
+        try
+        {
+            // 极其保守的截断，缩减至 2000 字符 (约 500-700 tokens)，确保在极小上下文模型下也能成功
+            var textToEmbed = chunk.Content.Length > 2000 ? chunk.Content[..2000] : chunk.Content;
+            var embeddedResponse = await embeddingGenerator.GenerateAsync(textToEmbed, cancellationToken: cancellationToken);
+            chunk.Embedding = new Pgvector.Vector(embeddedResponse.Vector);
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Error embedding chunk {ChunkId}, content length: {Length}", chunk.Id, chunk.Content?.Length);
+        }
     }
 
     public async Task Embed(IEnumerable<KnowledgeDocumentChunk> chunks, CancellationToken cancellationToken)
@@ -28,12 +38,32 @@ public partial class KnowledgeEmbeddingService
         var chunksToEmbed = chunks.Where(c => !string.IsNullOrWhiteSpace(c.Content)).ToList();
         if (!chunksToEmbed.Any()) return;
 
-        var texts = chunksToEmbed.Select(c => c.Content!).ToArray();
-        var embeddingsResponse = await embeddingGenerator.GenerateAsync(texts, cancellationToken: cancellationToken);
-
-        for (int i = 0; i < chunksToEmbed.Count; i++)
+        // 分批处理 (每批 5 条)
+        var batchSize = 5;
+        for (int i = 0; i < chunksToEmbed.Count; i += batchSize)
         {
-            chunksToEmbed[i].Embedding = new Pgvector.Vector(embeddingsResponse[i].Vector);
+            var batch = chunksToEmbed.Skip(i).Take(batchSize).ToList();
+            var texts = batch.Select(c => c.Content!.Length > 2000 ? c.Content![..2000] : c.Content!).ToArray();
+
+            try
+            {
+                var embeddingsResponse = await embeddingGenerator.GenerateAsync(texts, cancellationToken: cancellationToken);
+
+                for (int j = 0; j < batch.Count; j++)
+                {
+                    batch[j].Embedding = new Pgvector.Vector(embeddingsResponse[j].Vector);
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.LogWarning(ex, "Error embedding batch starting at index {Index}. Falling back to individual embedding.", i);
+                
+                // 批处理失败时，尝试逐条处理该批次
+                foreach (var chunk in batch)
+                {
+                    await Embed(chunk, cancellationToken);
+                }
+            }
         }
     }
 
@@ -41,10 +71,22 @@ public partial class KnowledgeEmbeddingService
     {
         var keywordWeight = 1.0f - vectorWeight;
 
-        // 1. 并行准备：生成向量的同时，准备数据库的关键字查询 (提升响应速度)
-        var vectorTask = embeddingGenerator.GenerateAsync(searchQuery, cancellationToken: cancellationToken);
+        // 1. 并行准备：生成向量的同时，准备数据库的关键字查询
+        Pgvector.Vector? queryVector = null;
+        var vectorTask = Task.Run(async () =>
+        {
+            try
+            {
+                var result = await embeddingGenerator.GenerateAsync(searchQuery, cancellationToken: cancellationToken);
+                queryVector = new Pgvector.Vector(result.Vector);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Error generating embedding for search query: {Query}", searchQuery);
+            }
+        }, cancellationToken);
         
-        // 2. 双路召回 - 路径 A：关键词召回 (先走数据库索引)
+        // 2. 双路召回 - 路径 A：关键词召回
         var keywordCandidatesTask = dbContext.KnowledgeDocumentChunks
             .Include(c => c.Document)
             .AsNoTracking()
@@ -54,26 +96,28 @@ public partial class KnowledgeEmbeddingService
             .Take(50)
             .ToListAsync(cancellationToken);
 
-        // 处理生成的向量
-        var embeddedSearchQuery = await vectorTask;
-        var queryVector = new Pgvector.Vector(embeddedSearchQuery.Vector);
-
-        // 2. 双路召回 - 路径 B：向量语义召回
-        var vectorCandidatesTask = dbContext.KnowledgeDocumentChunks
-            .Include(c => c.Document)
-            .AsNoTracking()
-            .Where(c => c.Document!.KnowledgeBaseId == knowledgeBaseId && c.Embedding != null)
-            .WhereIf(string.IsNullOrWhiteSpace(docName) is false, c => c.Document!.Title == docName)
-            .OrderBy(c => c.Embedding!.CosineDistance(queryVector))
-            .Take(50)
-            .ToListAsync(cancellationToken);
+        await vectorTask;
+        
+        // 2. 双路召回 - 路径 B：向量语义召回 (仅当向量生成成功时)
+        List<KnowledgeDocumentChunk> vectorCandidates = [];
+        if (queryVector != null)
+        {
+            vectorCandidates = await dbContext.KnowledgeDocumentChunks
+                .Include(c => c.Document)
+                .AsNoTracking()
+                .Where(c => c.Document!.KnowledgeBaseId == knowledgeBaseId && c.Embedding != null)
+                .WhereIf(string.IsNullOrWhiteSpace(docName) is false, c => c.Document!.Title == docName)
+                .OrderBy(c => c.Embedding!.CosineDistance(queryVector))
+                .Take(50)
+                .ToListAsync(cancellationToken);
+        }
 
         // 等待所有召回完成
-        await Task.WhenAll(keywordCandidatesTask, vectorCandidatesTask);
+        await Task.WhenAll(keywordCandidatesTask);
 
-        // 3. 结果合并与去重 (融合两路候选人)
+        // 3. 结果合并与去重
         var candidatesDict = keywordCandidatesTask.Result.ToDictionary(c => c.Id);
-        foreach (var vCandidate in vectorCandidatesTask.Result)
+        foreach (var vCandidate in vectorCandidates)
         {
             candidatesDict.TryAdd(vCandidate.Id, vCandidate);
         }
