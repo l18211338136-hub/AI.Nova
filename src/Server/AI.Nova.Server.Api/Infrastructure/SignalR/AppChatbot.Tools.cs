@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+﻿﻿using System.ComponentModel;
 using System.Text;
 using AI.Nova.Server.Api.Features.Identity;
 using AI.Nova.Server.Api.Infrastructure.Services;
@@ -254,6 +254,7 @@ public partial class AppChatbot
         await using var scope = serviceProvider.CreateAsyncScope();
 
         var textToSqlService = scope.ServiceProvider.GetRequiredService<TextToSqlService>();
+        var httpContextAccessor = scope.ServiceProvider.GetRequiredService<IHttpContextAccessor>();
 
         var result = await textToSqlService.GenerateReportAsync(
             query,
@@ -266,7 +267,14 @@ public partial class AppChatbot
             return $"Failed to generate report: {result.ErrorMessage}";
         }
 
-        var reportUrl = $"/{result.ReportFilePath}";
+        var httpContext = httpContextAccessor.HttpContext;
+        var request = httpContext?.Request;
+        
+        var scheme = request?.Scheme ?? "https";
+        var host = request?.Host.Value ?? "localhost";
+        var pathBase = request?.PathBase.Value ?? string.Empty;
+        
+        var reportUrl = $"{scheme}://{host}{pathBase}/{result.ReportFilePath}";
 
         var content = $"报表已成功生成！\n\n" +
                       $"标题: {result.ReportTitle}\n" +

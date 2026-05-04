@@ -209,20 +209,4 @@ public partial class AppAiChatPanel
 
         await base.DisposeAsync(disposing);
     }
-
-    private string? ExtractReportUrl(string content)
-    {
-        var reportUrl = string.Empty;
-        var match = Regex.Match(content, @"/attachments/reports/[a-f0-9]+\.html");
-        if (match.Success)
-        {
-            reportUrl = new Uri(AbsoluteServerAddress, match.Value).ToString();
-        }
-        return reportUrl;
-    }
-
-    private void OpenReportPreview(string reportUrl)
-    {
-        navigationManager.NavigateTo(new Uri(AbsoluteServerAddress, reportUrl).ToString());
-    }
 }

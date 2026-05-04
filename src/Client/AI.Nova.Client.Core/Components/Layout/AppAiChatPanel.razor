@@ -67,7 +67,7 @@
                                         @Localizer[nameof(AppStrings.Canceled)]
                                     </BitTag>
                                 }
-                                @if (!string.IsNullOrWhiteSpace(message.Content) && message.Content.Contains("/attachments/reports/"))
+                               @*  @if (!string.IsNullOrWhiteSpace(message.Content) && message.Content.Contains("/attachments/reports/"))
                                 {
                                     var reportUrl = ExtractReportUrl(message.Content);
                                     if (!string.IsNullOrEmpty(reportUrl))
@@ -89,7 +89,7 @@
                                             </div>
                                         </BitCard>
                                     }
-                                }
+                                } *@
                             }
                         }
 
