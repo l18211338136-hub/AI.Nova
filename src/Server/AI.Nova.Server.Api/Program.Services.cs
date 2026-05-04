@@ -1,4 +1,4 @@
-using System.ClientModel.Primitives;
+﻿using System.ClientModel.Primitives;
 using System.Net;
 using System.Net.Mail;
 using AdsPush;
@@ -93,6 +93,9 @@ public static partial class Program
         services.AddScoped<IDataSeeder, OrderSeeder>();
         services.AddScoped<IDataSeeder, CartSeeder>();
         services.AddScoped<IDataSeeder, KnowledgeBaseSeeder>();
+        services.AddScoped<TextToSqlService>();
+        services.AddScoped<EFCoreMetadataService>();
+        services.AddScoped<ReportGeneratorService>();
 
         services.AddSingleton(_ => PhoneNumberUtil.GetInstance());
         services.AddSingleton<IBlobStorage>(sp =>
@@ -443,7 +446,20 @@ public static partial class Program
             .UseOpenTelemetry(configure: c => c.EnableSensitiveData = env.IsDevelopment());
             // .UseDistributedCache()
         }
-
+        if (string.IsNullOrEmpty(appSettings.AI?.AzureOpenAI?.CoderApiKey) is false)
+        {
+            services.AddKeyedChatClient("CoderModel", sp => new Azure.AI.Inference.ChatCompletionsClient(endpoint: appSettings.AI.AzureOpenAI.CoderEndpoint,
+                credential: new Azure.AzureKeyCredential(appSettings.AI.AzureOpenAI.CoderApiKey),
+                options: new()
+                {
+                    Transport = new Azure.Core.Pipeline.HttpClientTransport(sp.GetRequiredService<IHttpClientFactory>().CreateClient("AI"))
+                }).AsIChatClient(appSettings.AI.AzureOpenAI.CoderModel))
+            .UseLogging()
+            .UseFunctionInvocation()
+            .UseOpenTelemetry(configure: c => c.EnableSensitiveData = env.IsDevelopment());
+            services.AddScoped<CoderClient>(sp => new CoderClient(
+                sp.GetRequiredKeyedService<IChatClient>("CoderModel")));
+        }
         if (string.IsNullOrEmpty(appSettings.AI?.OpenAI?.EmbeddingApiKey) is false)
         {
             services.AddEmbeddingGenerator(sp => new OpenAI.Embeddings.EmbeddingClient(model: appSettings.AI.OpenAI.EmbeddingModel, credential: new(appSettings.AI.OpenAI.EmbeddingApiKey), options: new()

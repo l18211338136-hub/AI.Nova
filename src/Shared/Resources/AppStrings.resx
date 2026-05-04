@@ -1340,4 +1340,7 @@ After reaching {0}, extra sign-ins will have reduced functions.</value>
   <data name="DocumentName" xml:space="preserve"><value>Document name</value></data>
   <data name="VectorWeight" xml:space="preserve"><value>Vector Weight</value></data>
   <data name="Search" xml:space="preserve"><value>Search</value></data>
+  <data name="ReportPreview" xml:space="preserve"><value>Report Preview</value></data>
+  <data name="ClickToViewReport" xml:space="preserve"><value>Click to view the full report</value></data>
+  <data name="ViewReport" xml:space="preserve"><value>View Report</value></data>
 </root>

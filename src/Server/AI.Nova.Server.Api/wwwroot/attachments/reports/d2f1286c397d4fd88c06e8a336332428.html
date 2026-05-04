@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据查询报表</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+</head>
+<body class="bg-gray-100 p-4">
+    <div class="max-w-6xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
+        <div class="p-6">
+            <h1 class="text-2xl font-bold mb-4">数据查询报表</h1>
+            <p class="mb-8">基于查询: 查询最近365天的商品销售数据</p>
+
+            <!-- 折线图 -->
+            <div id="lineChart" style="width: 100%; height: 400px;"></div>
+
+            <script type="text/javascript">
+                var lineChart = echarts.init(document.getElementById('lineChart'));
+                var option = {
+                    title: {
+                        text: '销售数量和总金额趋势'
+                    },
+                    tooltip: {
+                        trigger: 'axis'
+                    },
+                    legend: {
+                        data:['销售数量', '总金额']
+                    },
+                    xAxis: {
+                        type: 'category',
+                        boundaryGap: false,
+                        data: [
+                            "2025/4/30", "2025/5/31", "2025/6/30", "2025/7/31", "2025/8/31",
+                            "2025/9/30", "2025/10/31", "2025/11/30", "2025/12/31", "2026/1/31"
+                        ]
+                    },
+                    yAxis: {
+                        type: 'value'
+                    },
+                    series: [
+                        {
+                            name: '销售数量',
+                            type: 'line',
+                            data: [39340, 43200, 44640, 44639, 43200, 44640, 43200, 44639, 44640, 40319]
+                        },
+                        {
+                            name: '总金额',
+                            type: 'line',
+                            data: [1147486094, 1261378010, 1303386480, 1303382880, 1262364642, 1303386480, 1260669482, 1303385482, 1303386480, 1177081659]
+                        }
+                    ]
+                };
+                lineChart.setOption(option);
+            </script>
+
+            <!-- 柱状图 -->
+            <div id="barChart" style="width: 100%; height: 400px;"></div>
+
+            <script type="text/javascript">
+                var barChart = echarts.init(document.getElementById('barChart'));
+                var option = {
+                    title: {
+                        text: '销售数量和总金额'
+                    },
+                    tooltip: {},
+                    legend: {
+                        data:['销售数量', '总金额']
+                    },
+                    xAxis: {
+                        type: 'category',
+                        data: [
+                            "2013极速跑车日历", "CLA COUPE", "CLE Cabriolet", "CLE Coupe", "E-Class Sedan",
+                            "EQB SUV", "EQE SUV", "EQE Sedan", "EQS SUV", "EQS Sedan"
+                        ]
+                    },
+                    yAxis: {
+                        type: 'value'
+                    },
+                    series: [
+                        {
+                            name: '销售数量',
+                            type: 'bar',
+                            data: [2116, 2116, 2116, 2116, 2116, 2116, 2116, 2116, 2116, 2116]
+                        },
+                        {
+                            name: '总金额',
+                            type: 'bar',
+                            data: [116000, 10100000, 15000000, 1300307184, 14780000, 10840000, 15810000, 15210000, 27200000, 27200000]
+                        }
+                    ]
+                };
+                barChart.setOption(option);
+            </script>
+
+            <!-- 排名列表 -->
+            <h2 class="text-xl font-bold mt-8">销售数量最多的前10个商品</h2>
+            <ul class="list-disc pl-4">
+                <li>Radar_EV_Prizm眼镜 - 2116</li>
+                <li>Torfabrik官方比赛用球-红色 - 2116</li>
+                <li>Mercedes-AMG GT Coupe - 2116</li>
+                <li>PS4手柄 - 2116</li>
+                <li>S-Class Sedan - 2116</li>
+                <li>Supreme高尔夫球_2 - 2116</li>
+                <li>CLE Coupe - 2116</li>
+                <li>Evolution高中比赛-篮球 - 2116</li>
+                <li>CLA COUPE - 2116</li>
+                <li>Torfabrik官方比赛用球-黄色 - 2116</li>
+            </ul>
+
+        </div>
+    </div>
+</body>
+</html>

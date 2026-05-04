@@ -1,10 +1,11 @@
 ﻿using System.ComponentModel;
-using ModelContextProtocol.Server;
-using Microsoft.AspNetCore.SignalR;
-using AI.Nova.Shared.Features.Diagnostic;
+using System.Text;
 using AI.Nova.Server.Api.Features.Identity;
-using AI.Nova.Shared.Features.Identity.Dtos;
 using AI.Nova.Server.Api.Infrastructure.Services;
+using AI.Nova.Shared.Features.Diagnostic;
+using AI.Nova.Shared.Features.Identity.Dtos;
+using Microsoft.AspNetCore.SignalR;
+using ModelContextProtocol.Server;
 
 namespace AI.Nova.Server.Api.Infrastructure.SignalR;
 
@@ -231,6 +232,70 @@ public partial class AppChatbot
             serviceProvider.GetRequiredService<ServerExceptionHandler>().Handle(exp);
             return "Failed to clear app files on the device.";
         }
+    }
+
+    /// <summary>
+    /// Convert natural language into PostgreSQL query and execute it safely. 
+    ///</summary> 
+    [Description("""
+        Converts natural language into PostgreSQL SQL query and executes it. 
+        Use this tool when: 
+        - User asks about database data 
+        - User requests reports 
+        - User asks statistics 
+        - User asks filtering/searching data IMPORTANT:
+        - Only SELECT queries are allowed - Never generate INSERT/UPDATE/DELETE/DROP 
+        """)]
+    [McpServerTool(Name = nameof(QueryDatabase))]
+    private async Task<string> QueryDatabase([Required, Description("Natural language query describing the data analysis or report needed")] string query,
+    [Description("Optional custom title for the report")] string? reportTitle = null,
+    [Description("Optional custom description for the report")] string? reportDescription = null)
+    {
+        await using var scope = serviceProvider.CreateAsyncScope();
+
+        var textToSqlService = scope.ServiceProvider.GetRequiredService<TextToSqlService>();
+
+        var result = await textToSqlService.GenerateReportAsync(
+            query,
+            reportTitle,
+            reportDescription,
+            CancellationToken.None);
+
+        if (!result.Success)
+        {
+            return $"Failed to generate report: {result.ErrorMessage}";
+        }
+
+        var reportUrl = $"/{result.ReportFilePath}";
+
+        var content = $"报表已成功生成！\n\n" +
+                      $"标题: {result.ReportTitle}\n" +
+                      $"描述: {result.ReportDescription}\n" +
+                      $"生成时间: {result.GeneratedAt:yyyy-MM-dd HH:mm:ss}\n" +
+                      $"SQL 查询数量: {result.Step2_GeneratedSqlQueries.Count}\n" +
+                      $"执行结果: {result.Step3_ExecutionResults.Count}\n" +
+                      $"报表预览链接: {reportUrl}\n\n" +
+                      $"点击链接查看完整报表: [查看报表]({reportUrl})";
+
+        if (AppEnvironment.IsDevelopment())
+        {
+            var sb = new StringBuilder();
+
+            sb.AppendLine("生成的SQL语句如下：！");
+            sb.AppendLine();
+
+            for (int i = 0; i < result.Step2_GeneratedSqlQueries.Count; i++)
+            {
+                var sql = result.Step2_GeneratedSqlQueries[i].Sql;
+
+                sb.AppendLine($"{i + 1}、【{sql}】");
+                sb.AppendLine();
+            }
+
+            content += sb.ToString();
+        }
+
+        return content;
     }
 
 }

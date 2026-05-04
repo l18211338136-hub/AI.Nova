@@ -178,6 +178,7 @@ public partial class AppChatbot
             AIFunctionFactory.Create(SetTheme),
             AIFunctionFactory.Create(CheckLastError),
             AIFunctionFactory.Create(ClearAppFiles),
+            AIFunctionFactory.Create(QueryDatabase)
         };
 
         var chatOptions = new ChatOptions { Tools = [.. tools] };

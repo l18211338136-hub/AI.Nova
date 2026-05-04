@@ -1,4 +1,4 @@
-using Pgvector.EntityFrameworkCore;
+﻿using Pgvector.EntityFrameworkCore;
 using AI.Nova.Server.Api.Infrastructure.Data;
 
 namespace AI.Nova.Server.Api.Features.Knowledge;
@@ -19,14 +19,30 @@ public partial class KnowledgeEmbeddingService
 
         try
         {
-            // 极其保守的截断，缩减至 2000 字符 (约 500-700 tokens)，确保在极小上下文模型下也能成功
-            var textToEmbed = chunk.Content.Length > 2000 ? chunk.Content[..2000] : chunk.Content;
+            var textToEmbed = PrepareTextForEmbedding(chunk.Content);
+
             var embeddedResponse = await embeddingGenerator.GenerateAsync(textToEmbed, cancellationToken: cancellationToken);
+
+            if (embeddedResponse.Vector.Length != 768)
+            {
+                logger.LogWarning("Embedding vector length mismatch. Expected: 768, Actual: {Length}",
+                    embeddedResponse.Vector.Length);
+            }
+
             chunk.Embedding = new Pgvector.Vector(embeddedResponse.Vector);
+
+            logger.LogInformation("Successfully embedded chunk {ChunkId}, content length: {Length}, embedded length: {EmbeddedLength}",
+                chunk.Id, chunk.Content?.Length, textToEmbed.Length);
         }
         catch (Exception ex)
         {
             logger.LogError(ex, "Error embedding chunk {ChunkId}, content length: {Length}", chunk.Id, chunk.Content?.Length);
+
+            if (ex is HttpRequestException || ex is TimeoutException)
+            {
+                logger.LogWarning("Network error occurred, will retry embedding chunk {ChunkId}", chunk.Id);
+                await RetryEmbeddingAsync(chunk, cancellationToken);
+            }
         }
     }
 
@@ -214,5 +230,86 @@ public partial class KnowledgeEmbeddingService
         }
 
         return Math.Round(finalScore, 4);
+    }
+
+    private string PrepareTextForEmbedding(string content)
+    {
+        if (string.IsNullOrWhiteSpace(content)) return string.Empty;
+
+        var maxLength = GetOptimalMaxLengthFor768(content);
+
+        var processedContent = content
+            .Trim()
+            .Replace("\r\n", "\n")
+            .Replace("\t", " ")
+            .Replace("  ", " ");
+
+        if (processedContent.Length <= maxLength)
+            return processedContent;
+
+        var truncatedContent = processedContent[..maxLength];
+
+        var lastNewLine = truncatedContent.LastIndexOf('\n');
+        if (lastNewLine > maxLength * 0.8)
+        {
+            return truncatedContent[..lastNewLine].Trim();
+        }
+
+        var sentenceEndChars = new[] { '.', '!', '?', '。', '！', '？' };
+        var lastSentence = truncatedContent.LastIndexOfAny(sentenceEndChars);
+        if (lastSentence > maxLength * 0.7)
+        {
+            var endIndex = Math.Min(lastSentence + 1, truncatedContent.Length);
+            return truncatedContent[..endIndex].Trim();
+        }
+
+        return truncatedContent.Trim();
+    }
+
+    private int GetOptimalMaxLengthFor768(string content)
+    {
+        var contentLength = content.Length;
+
+        return contentLength switch
+        {
+            < 1000 => 1200,
+            < 2000 => 1800,
+            < 5000 => 2500,
+            < 10000 => 3500,
+            _ => 4500
+        };
+    }
+    private async Task RetryEmbeddingAsync(KnowledgeDocumentChunk chunk, CancellationToken cancellationToken, int maxRetries = 3)
+    {
+        for (int attempt = 1; attempt <= maxRetries; attempt++)
+        {
+            try
+            {
+                await Task.Delay(TimeSpan.FromSeconds(Math.Pow(2, attempt - 1)), cancellationToken);
+
+                var textToEmbed = PrepareTextForEmbedding(chunk.Content);
+                var embeddedResponse = await embeddingGenerator.GenerateAsync(textToEmbed, cancellationToken: cancellationToken);
+
+                if (embeddedResponse.Vector.Length != 768)
+                {
+                    logger.LogWarning("Retry {Attempt}: Embedding vector length mismatch. Expected: 768, Actual: {Length}",
+                        attempt, embeddedResponse.Vector.Length);
+                }
+
+                chunk.Embedding = new Pgvector.Vector(embeddedResponse.Vector);
+
+                logger.LogInformation("Successfully embedded chunk {ChunkId} on attempt {Attempt}", chunk.Id, attempt);
+                return;
+            }
+            catch (Exception ex) when (attempt < maxRetries)
+            {
+                logger.LogWarning(ex, "Attempt {Attempt} failed for chunk {ChunkId}, retrying...", attempt, chunk.Id);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "All {MaxRetries} attempts failed for chunk {ChunkId}", maxRetries, chunk.Id);
+                throw;
+            }
+        }
     }
 }

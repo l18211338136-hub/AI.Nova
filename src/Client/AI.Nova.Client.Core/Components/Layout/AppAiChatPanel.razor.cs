@@ -1,4 +1,5 @@
-﻿using System.Threading.Channels;
+﻿using System.Text.RegularExpressions;
+using System.Threading.Channels;
 using AI.Nova.Shared.Features.Chatbot;
 using AI.Nova.Shared.Features.Identity.Dtos;
 using Microsoft.AspNetCore.Components.Web;
@@ -17,6 +18,7 @@ public partial class AppAiChatPanel
 
     [AutoInject] private HubConnection hubConnection = default!;
 
+    [AutoInject] private NavigationManager navigationManager = default!;
 
     private bool isOpen;
     private bool isLoading;
@@ -206,5 +208,21 @@ public partial class AppAiChatPanel
         await StopChannel();
 
         await base.DisposeAsync(disposing);
+    }
+
+    private string? ExtractReportUrl(string content)
+    {
+        var reportUrl = string.Empty;
+        var match = Regex.Match(content, @"/attachments/reports/[a-f0-9]+\.html");
+        if (match.Success)
+        {
+            reportUrl = new Uri(AbsoluteServerAddress, match.Value).ToString();
+        }
+        return reportUrl;
+    }
+
+    private void OpenReportPreview(string reportUrl)
+    {
+        navigationManager.NavigateTo(new Uri(AbsoluteServerAddress, reportUrl).ToString());
     }
 }

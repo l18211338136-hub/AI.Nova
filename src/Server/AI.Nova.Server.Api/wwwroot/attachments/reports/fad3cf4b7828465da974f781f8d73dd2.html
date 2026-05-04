@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据查询报表</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+</head>
+<body class="bg-gray-100 p-4">
+    <div class="max-w-6xl mx-auto bg-white shadow-md rounded-lg overflow-hidden">
+        <div class="p-4 border-b border-gray-200">
+            <h1 class="text-3xl font-bold">数据查询报表</h1>
+            <p class="text-gray-700">基于查询: 查询最近180天内各个地区商品销售数据</p>
+        </div>
+        <div class="px-4 py-6">
+            <h2 class="text-xl font-semibold mb-4">柱状图：各地区商品销售总额</h2>
+            <div id="sales-bar-chart" style="width: 100%; height: 400px;"></div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        var salesData = [
+            { name: '北京', value: 1500 },
+            { name: '上海', value: 2000 },
+            { name: '广州', value: 1800 },
+            { name: '深圳', value: 1700 },
+            { name: '成都', value: 1600 }
+        ];
+
+        var chart = echarts.init(document.getElementById('sales-bar-chart'));
+        var option = {
+            title: {
+                text: '各地区商品销售总额'
+            },
+            tooltip: {},
+            xAxis: {
+                type: 'category',
+                data: salesData.map(item => item.name)
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: [{
+                name: '销售总额',
+                type: 'bar',
+                data: salesData.map(item => item.value)
+            }]
+        };
+        chart.setOption(option);
+    </script>
+</body>
+</html>

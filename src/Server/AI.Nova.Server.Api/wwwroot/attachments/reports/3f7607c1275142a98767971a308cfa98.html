@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据查询报表</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+</head>
+<body class="bg-gray-100 p-4">
+    <div class="max-w-6xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
+        <div class="p-4 border-b border-gray-200">
+            <h1 class="text-3xl font-bold">数据查询报表</h1>
+            <p>基于查询: 查询最近180天的商品销售数据</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
+            <!-- 折线图 -->
+            <div id="lineChart" style="width: 100%; height: 400px;"></div>
+            <!-- 柱状图 -->
+            <div id="barChart" style="width: 100%; height: 400px;"></div>
+        </div>
+        <div class="p-4 border-b border-gray-200">
+            <h2>Top 10 销售数量最多的商品</h2>
+            <table class="w-full table-auto">
+                <thead>
+                    <tr>
+                        <th class="px-4 py-2">商品名称</th>
+                        <th class="px-4 py-2">销售数量</th>
+                    </tr>
+                </thead>
+                <tbody id="top10Table">
+                    <!-- 数据将通过 JavaScript 动态填充 -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        // 折线图数据
+        var lineChartData = {
+            xAxis: ['2025/10', '2025/11', '2025/12', '2026/1', '2026/2', '2026/3', '2026/4'],
+            series: [{
+                name: '销售数量',
+                type: 'line',
+                data: [36431, 44639, 44640, 40319, 44640, 43200, 4285]
+            }, {
+                name: '总金额',
+                type: 'line',
+                data: [1063668258, 1303385482, 1303386480, 1177081659, 1303386480, 1262332827, 124354838]
+            }]
+        };
+
+        // 柱状图数据
+        var barChartData = {
+            xAxis: ['2025/10', '2025/11', '2025/12', '2026/1', '2026/2', '2026/3', '2026/4'],
+            series: [{
+                name: '销售数量',
+                type: 'bar',
+                data: [36431, 44639, 44640, 40319, 44640, 43200, 4285]
+            }]
+        };
+
+        // Top 10 销售数量最多的商品数据
+        var top10Data = [
+            { name: 'Evolution高中比赛-篮球', quantity: 1041 },
+            { name: 'FIFA_17游戏', quantity: 1041 },
+            { name: '2013极速跑车日历', quantity: 1041 },
+            { name: 'CLA COUPE', quantity: 1041 },
+            { name: 'EQB SUV', quantity: 1041 },
+            { name: 'CLE Cabriolet', quantity: 1041 },
+            { name: 'CLE Coupe', quantity: 1041 },
+            { name: 'EQS SUV', quantity: 1041 },
+            { name: 'EQS Sedan', quantity: 1041 },
+            { name: 'Ford Bronco', quantity: 1041 }
+        ];
+
+        // 初始化折线图
+        var lineChart = echarts.init(document.getElementById('lineChart'));
+        lineChart.setOption({
+            title: {
+                text: '销售数量和总金额趋势'
+            },
+            tooltip: {},
+            legend: {
+                data:['销售数量', '总金额']
+            },
+            xAxis: {
+                data: lineChartData.xAxis
+            },
+            yAxis: {},
+            series: lineChartData.series
+        });
+
+        // 初始化柱状图
+        var barChart = echarts.init(document.getElementById('barChart'));
+        barChart.setOption({
+            title: {
+                text: '销售数量趋势'
+            },
+            tooltip: {},
+            legend: {
+                data:['销售数量']
+            },
+            xAxis: {
+                data: barChartData.xAxis
+            },
+            yAxis: {},
+            series: barChartData.series
+        });
+
+        // 填充 Top 10 销售数量最多的商品表格
+        var top10Table = document.getElementById('top10Table');
+        top10Data.forEach(item => {
+            var row = document.createElement('tr');
+            row.innerHTML = `
+                <td class="px-4 py-2">${item.name}</td>
+                <td class="px-4 py-2">${item.quantity}</td>
+            `;
+            top10Table.appendChild(row);
+        });
+    </script>
+</body>
+</html>

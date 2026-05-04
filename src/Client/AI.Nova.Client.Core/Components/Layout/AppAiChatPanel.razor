@@ -67,6 +67,29 @@
                                         @Localizer[nameof(AppStrings.Canceled)]
                                     </BitTag>
                                 }
+                                @if (!string.IsNullOrWhiteSpace(message.Content) && message.Content.Contains("/attachments/reports/"))
+                                {
+                                    var reportUrl = ExtractReportUrl(message.Content);
+                                    if (!string.IsNullOrEmpty(reportUrl))
+                                    {
+                                        <BitCard Class="report-preview-card" Style="margin-top: 1rem;">
+                                            <div Style="padding: 1rem;">
+                                                <BitText Typography="BitTypography.H6" Color="BitColor.Primary" Style="margin-bottom: 0.5rem;">
+                                                    @(Localizer[nameof(AppStrings.ReportPreview)] ?? "Report Preview")
+                                                </BitText>
+                                                <BitText Typography="BitTypography.Caption1" Color="BitColor.Secondary" Style="margin-bottom: 1rem;">
+                                                    @(Localizer[nameof(AppStrings.ClickToViewReport)] ?? "Click to view the full report")
+                                                </BitText>
+                                                <BitButton Variant="BitVariant.Outline"
+                                                           Color="BitColor.PrimaryBackground"
+                                                           IconName="BitIconName.File"
+                                                           OnClick="() => OpenReportPreview(reportUrl)">
+                                                    @(Localizer[nameof(AppStrings.ViewReport)] ?? "View Report")
+                                                </BitButton>
+                                            </div>
+                                        </BitCard>
+                                    }
+                                }
                             }
                         }
 

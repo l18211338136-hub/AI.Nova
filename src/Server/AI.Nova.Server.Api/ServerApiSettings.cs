@@ -36,6 +36,8 @@ public partial class ServerApiSettings : ServerSharedSettings
 
     [Required]
     public string ProductImagesDir { get; set; } = default!;
+    [Required]
+    public string ReportsDir { get; set; } = default!;
 
     public HangfireOptions? Hangfire { get; set; }
 
@@ -142,6 +144,10 @@ public class AzureOpenAIOptions
     public string? ChatModel { get; set; }
     public Uri? ChatEndpoint { get; set; }
     public string? ChatApiKey { get; set; }
+
+    public string? CoderModel { get; set; }
+    public Uri? CoderEndpoint { get; set; }
+    public string? CoderApiKey { get; set; }
 
     public string? EmbeddingModel { get; set; }
     public Uri? EmbeddingEndpoint { get; set; }
