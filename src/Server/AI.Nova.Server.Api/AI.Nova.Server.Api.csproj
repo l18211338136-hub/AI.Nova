@@ -42,6 +42,7 @@
         <PackageReference Include="Hangfire.AspNetCore" />
         <PackageReference Include="Hangfire.EntityFrameworkCore" />
         <PackageReference Include="HtmlSanitizer" />
+        <PackageReference Include="JiebaNet.Segmenter" />
         <PackageReference Include="libphonenumber-csharp" />
         <PackageReference Include="Humanizer" />
         <PackageReference Include="Microsoft.AspNetCore.DataProtection.EntityFrameworkCore" />
