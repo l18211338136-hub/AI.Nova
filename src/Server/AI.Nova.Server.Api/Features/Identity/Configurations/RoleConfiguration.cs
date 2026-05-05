@@ -6,18 +6,18 @@ public partial class RoleConfiguration : IEntityTypeConfiguration<Role>
 {
     public void Configure(EntityTypeBuilder<Role> builder)
     {
-        builder.ToTable(t => t.HasComment("角色表：用于系统权限管理的角色定义"));
+        builder.ToTable(t => t.HasComment("角色表"));
 
         builder.HasIndex(role => role.Name).IsUnique();
         builder.Property(role => role.Name).HasMaxLength(50)
-            .HasComment("角色名称：如 SuperAdmin, Demo 等");
+            .HasComment("名称");
 
         builder.Property(role => role.NormalizedName)
            .HasMaxLength(50)
-           .HasComment("标准化名称：用于数据库查询的大写名称");
+           .HasComment("标准化名称");
 
         builder.Property(role => role.ConcurrencyStamp)
-            .HasComment("并发标记：用于乐观锁控制");
+            .HasComment("并发标记");
 
         builder.HasMany(role => role.Users)
             .WithOne(ur => ur.Role)

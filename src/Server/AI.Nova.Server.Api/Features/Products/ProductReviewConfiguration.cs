@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace AI.Nova.Server.Api.Features.Products;
@@ -7,8 +7,6 @@ public class ProductReviewConfiguration : IEntityTypeConfiguration<ProductReview
 {
     public void Configure(EntityTypeBuilder<ProductReview> builder)
     {
-        builder.HasComment("商品评价表");
-
         builder.HasOne(x => x.Product)
                .WithMany()
                .HasForeignKey(x => x.ProductId)

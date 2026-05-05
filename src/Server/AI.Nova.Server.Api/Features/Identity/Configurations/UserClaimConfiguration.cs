@@ -6,15 +6,15 @@ public partial class UserClaimConfiguration : IEntityTypeConfiguration<UserClaim
 {
     public void Configure(EntityTypeBuilder<UserClaim> builder)
     {
-        builder.Property(uc => uc.UserId).HasComment("用户表主键Id：关联Users表Id字段");
+        builder.Property(uc => uc.UserId).HasComment("用户外键");
 
         builder.Property(uc => uc.ClaimType)
             .HasMaxLength(256) 
-            .HasComment("声明的类型（例如：'Permission.Read', 'Department', 'FullName'）");
+            .HasComment("声明类型");
 
         builder.Property(uc => uc.ClaimValue)
             .HasMaxLength(1024)
-            .HasComment("声明的具体值（例如：'Admin', 'HR', 'John Doe'）");
+            .HasComment("声明值");
 
         builder.HasIndex(userClaim => new { userClaim.UserId, userClaim.ClaimType, userClaim.ClaimValue });
     }

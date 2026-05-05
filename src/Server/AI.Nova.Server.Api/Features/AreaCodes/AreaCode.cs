@@ -17,7 +17,7 @@ public class AreaCode : AuditEntity
     /// </summary>
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.None)] // 通常区划代码由外部标准定义，非自增
-    [Comment("行政区划代码 (主键)，遵循国家标准 (如 GB/T 2260)")]
+    [Comment("主键")]
     public long Code { get; set; }
 
     /// <summary>
@@ -33,7 +33,7 @@ public class AreaCode : AuditEntity
     /// 1:省级, 2:地级, 3:县级, 4:乡级, 5:村级
     /// </summary>
     [Range(1, 5)]
-    [Comment("行政级别 (1-5): 1=省级, 2=地级, 3=县级, 4=乡级, 5=村级")]
+    [Comment("行政级别: 1：省；2：地级；3：县级；4：乡级； 5：村级")]
     public short? Level { get; set; }
 
     /// <summary>
@@ -41,7 +41,7 @@ public class AreaCode : AuditEntity
     /// 用于构建树形层级结构（自关联外键）。
     /// </summary>
     [ForeignKey(nameof(Pcode))]
-    [Comment("父级行政区划代码 (自关联外键)")]
+    [Comment("父级区划代码")]
     public long? Pcode { get; set; }
 
     /// <summary>

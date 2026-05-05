@@ -8,70 +8,70 @@ namespace AI.Nova.Server.Api.Features.Addresses;
 /// 用户收货地址表：存储用户的多级行政区划地址信息，支持标记默认地址及作为订单配送的依据。
 /// </summary>
 [Table("Addresses")]
-[Comment("用户收货地址表：存储用户的收货联系人、电话及多级行政区划详细地址。")]
+[Comment("用户收货地址表")]
 public partial class Address : AuditEntity
 {
     /// <summary>
-    /// 地址记录唯一标识。
+    /// 主键
     /// </summary>
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    [Comment("地址记录唯一标识")]
+    [Comment("主键")]
     public Guid Id { get; set; }
 
     /// <summary>
     /// 该地址所属的用户账户。
     /// </summary>
     [ForeignKey(nameof(UserId))]
-    [Comment("拥有该地址记录的用户对象")]
+    [Comment("用户")]
     public User? User { get; set; }
 
     /// <summary>
     /// 外键：用户 ID。
     /// </summary>
-    [Comment("关联的用户 ID")]
+    [Comment("用户外键")]
     public Guid? UserId { get; set; }
 
     /// <summary>
     /// 负责接收货物的联系人姓名快照。
     /// </summary>
     [MaxLength(64)]
-    [Comment("收货联系人姓名")]
+    [Comment("收货人姓名")]
     public string? RecipientName { get; set; }
 
     /// <summary>
     /// 用于物流联系的电话单号。
     /// </summary>
     [MaxLength(20)]
-    [Comment("收货联系人电话号码")]
+    [Comment("收货联系号码")]
     public string? PhoneNumber { get; set; }
 
     /// <summary>
     /// 地址所属的一级行政区（省/直辖市/自治区）。
     /// </summary>
     [MaxLength(32)]
-    [Comment("一级行政区划分 (省/自治区/直辖市)")]
+    [Comment("省")]
     public string? Province { get; set; }
 
     /// <summary>
     /// 地址所属的二级行政区（地级市/盟/自治州）。
     /// </summary>
     [MaxLength(32)]
-    [Comment("二级行政区划分 (城市)")]
+    [Comment("市")]
     public string? City { get; set; }
 
     /// <summary>
     /// 地址所属的三级行政区（区/县/旗）。
     /// </summary>
     [MaxLength(32)]
-    [Comment("三级行政区划分 (区/县)")]
+    [Comment("区")]
     public string? District { get; set; }
 
     /// <summary>
     /// 四级以下详细路名、门牌号或地标描述。
     /// </summary>
     [MaxLength(256)]
-    [Comment("详细街道/门牌地址描述")]
+    [Comment("详细地址")]
     public string? StreetAddress { get; set; }
 
     /// <summary>
@@ -84,7 +84,7 @@ public partial class Address : AuditEntity
     /// <summary>
     /// 标记该地址是否作为用户的常用默认收货地址。
     /// </summary>
-    [Comment("是否设为该用户的默认首选收货地址")]
+    [Comment("默认地址")]
     public bool? IsDefault { get; set; }
 
     // 导航属性

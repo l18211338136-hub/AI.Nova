@@ -3,29 +3,29 @@
 namespace AI.Nova.Server.Api.Features.Identity.Models;
 
 [Table("UserTokens")]
-[Comment("用户令牌表：存储用户的身份验证令牌、刷新令牌或第三方登录令牌。")]
+[Comment("用户令牌表")]
 public class UserToken : IdentityUserToken<Guid>, IAuditableEntity, ISoftDelete
 {
     public User? User { get; set; }
 
-    [Comment("记录创建时间")]
+    [Comment("创建时间")]
     public DateTimeOffset? CreatedOn { get; set; }
 
-    [Comment("记录创建者ID")]
+    [Comment("创建者")]
     public Guid? CreatedBy { get; set; }
 
-    [Comment("记录最后修改时间")]
+    [Comment("修改时间")]
     public DateTimeOffset? ModifiedOn { get; set; }
 
-    [Comment("记录最后修改者ID")]
+    [Comment("修改者")]
     public Guid? ModifiedBy { get; set; }
 
-    [Comment("软删除标记：true表示已删除")]
+    [Comment("软删除")]
     public bool? IsDeleted { get; set; }
 
-    [Comment("记录删除时间")]
+    [Comment("删除时间")]
     public DateTimeOffset? DeletedOn { get; set; }
 
-    [Comment("记录删除者ID")]
+    [Comment("删除者")]
     public Guid? DeletedBy { get; set; }
 }

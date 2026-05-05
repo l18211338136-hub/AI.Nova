@@ -12,26 +12,26 @@ namespace AI.Nova.Server.Api.Features.Identity.Models;
 /// 存储用户的 WebAuthn (FIDO2) 认证凭证
 /// </summary>
 [Table("WebAuthnCredentials")]
-[Comment("WebAuthn凭据表：存储用户的 WebAuthn (FIDO2) 认证凭证，用于实现无密码登录。")] 
+[Comment("凭据表")] 
 public class WebAuthnCredential : AuditEntity
 {
     [Key]
-    [Comment("凭证的唯一标识符 (Credential ID)")] 
+    [Comment("主键")] 
     public required byte[] Id { get; set; }
 
-    [Comment("关联用户的唯一标识符")]
+    [Comment("用户外键")]
     public Guid? UserId { get; set; }
 
     [ForeignKey(nameof(UserId))]
     public User? User { get; set; }
 
-    [Comment("用户的公钥 (COSE Key 格式)，用于验证签名")]
+    [Comment("公钥")]
     public byte[]? PublicKey { get; set; }
 
-    [Comment("签名计数器，用于防止重放攻击")]
+    [Comment("签名计数器")]
     public uint? SignCount { get; set; }
 
-    [Comment("认证器支持的传输方式 (USB, NFC, BLE 等)")]
+    [Comment("传输方式 (0：usb，1：nfc，2：ble，3：smart-card，4：hybrid，5，internal")]
     public AuthenticatorTransport[]? Transports { get; set; }
 
     [Comment("指示该凭证是否具备备份资格")]

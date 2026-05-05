@@ -8,7 +8,7 @@ namespace AI.Nova.Server.Api.Features.Products;
 /// 商品评价表：存储用户对已购商品的评价信息，包括评分、评论内容及匿名偏好，用于商品信誉体系构建。
 /// </summary>
 [Table("ProductReviews")]
-[Comment("商品评价表：存储用户对已购商品的评价信息，用于商品信誉和口碑展示。")]
+[Comment("商品评价表")]
 public partial class ProductReview : AuditEntity
 {
     /// <summary>
@@ -16,7 +16,7 @@ public partial class ProductReview : AuditEntity
     /// </summary>
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    [Comment("评价记录唯一标识")]
+    [Comment("主键")]
     public Guid Id { get; set; }
 
     /// <summary>
@@ -29,7 +29,7 @@ public partial class ProductReview : AuditEntity
     /// <summary>
     /// 外键：订单 ID。
     /// </summary>
-    [Comment("关联的订单 ID")]
+    [Comment("订单外键")]
     public Guid? OrderId { get; set; }
 
     /// <summary>
@@ -42,7 +42,7 @@ public partial class ProductReview : AuditEntity
     /// <summary>
     /// 外键：商品 ID。
     /// </summary>
-    [Comment("被评价的商品 ID")]
+    [Comment("商品外键")]
     public Guid? ProductId { get; set; }
 
     /// <summary>
@@ -55,25 +55,25 @@ public partial class ProductReview : AuditEntity
     /// <summary>
     /// 外键：用户 ID。
     /// </summary>
-    [Comment("发表评论的用户 ID")]
+    [Comment("用户外键")]
     public Guid? UserId { get; set; }
 
     /// <summary>
     /// 用户给出的评分等级，通常为 1-5 星。
     /// </summary>
-    [Comment("商品评分 (取值范围 1-5)")]
+    [Comment("评分 (取值范围 1-5)")]
     public short? Rating { get; set; }
 
     /// <summary>
     /// 评价的详细文字描述（支持后期 SEO 检索及前端展示）。
     /// </summary>
     [MaxLength(1024)]
-    [Comment("用户发表的评价正文内容")]
+    [Comment("评论内容")]
     public string? Comment { get; set; }
 
     /// <summary>
     /// 用户是否选择隐藏个人身份进行匿名评论。
     /// </summary>
-    [Comment("是否启用匿名方式显示评价")]
+    [Comment("是否匿名评论")]
     public bool? IsAnonymous { get; set; }
 }
